@@ -1,0 +1,228 @@
+home-page
+<q-card
+            class="rounded-borders col-2"
+            v-for="(img, index) in carousels[n - 1]"
+            :key="index"
+          >
+            <img :src="img" />
+
+            <q-card-section>
+              <q-rating
+                v-model="ratingModel"
+                size="2em"
+                :max="5"
+                color="yellow"
+                readonly
+              />
+
+              <div class="q-pa-xs text-caption">317 responses</div>
+            </q-card-section>
+
+            <q-card-section class="q-pt-none">
+              {{ lorem }}
+            </q-card-section>
+          </q-card>
+
+<div
+          class="row fit justify-start items-center q-gutter-xs q-col-gutter no-wrap"
+        >
+          <div class="col-2"></div>
+          <q-btn
+            v-for="n in 4"
+            :key="n"
+            class="rounded-borders col-2"
+            label="Short activity description"
+          />
+          <div class="col-2"></div>
+        </div>
+
+
+
+
+
+
+
+        <q-card
+          v-for="(img, index) in activities.slice((n - 1) * 4, n * 4)"
+          class="rounded-borders col-2"
+          :key="index"
+        >
+          <img :src="img" />
+          <q-card-section>
+            <q-rating
+              v-model="ratingModel"
+              size="2em"
+              :max="5"
+              color="yellow"
+              readonly
+            />
+
+            <div class="q-pa-xs text-caption">317 responses</div>
+          </q-card-section>
+
+          <q-card-section class="q-pt-none">
+            {{ lorem }}
+          </q-card-section>
+        </q-card>
+
+
+first way to get data from database and get them into component is using the onBeforeMount function
+const activities_back = reactive({
+      carousels: "",
+      total_act: "",
+    });
+    onBeforeMount(() => {
+      axios.get("http://localhost:5000/get_activities").then((resp) => {
+        activities_back.carousels = [
+          resp.data.slice(0, 4),
+          resp.data.slice(4, 8),
+          resp.data.slice(8, 12),
+          resp.data.slice(12, 16),
+        ];
+        activities_back.total_act = resp.data;
+        console.log(activities_back.total_act);
+      });
+    });
+
+In the composition api, instead of having data and methods keys to return in our single file component,
+everything is nested inside the setup key, and return what we want to reference in our template.
+
+
+
+<div class="row q-pt-xl">
+      <div class="col-1"></div>
+      <div class="col text-body1 text-weight-regular">
+        The most popular activities
+      </div>
+    </div>
+
+    <q-carousel
+      v-model="slide"
+      transition-prev="slide-right"
+      transition-next="slide-left"
+      swipeable
+      animated
+      control-color="primary"
+      infinite
+      padding
+      arrows
+      height="500px"
+      class="shadow-2 q-mt-lg rounded-borders"
+    >
+      <q-carousel-slide
+        v-for="n in 4"
+        :key="n"
+        :name="n"
+        class="column no-wrap"
+      >
+        <div
+          class="row fit justify-start items-center q-gutter-xs q-col-gutter no-wrap"
+        >
+          <div class="col-2"></div>
+          <div v-if="status === 'loading'">Loading...</div>
+          <ActivityCard
+            v-else-if="status === 'success'"
+            class="col-2"
+            v-for="(act, index) in Object.values(data).slice(
+              (n - 1) * 4,
+              n * 4
+            )"
+            :target_age_group_left="act['target_age_group_left']"
+            :target_age_group_right="act['target_age_group_right']"
+            :title="act['activity_title']"
+            :key="index"
+            :ratingModel="ratingModel"
+            :text="lorem"
+          />
+
+          <div class="col-2"></div>
+        </div>
+        <div
+          class="row fit justify-start items-center q-gutter-xs q-col-gutter no-wrap"
+        >
+          <div class="col-2"></div>
+          <q-btn
+            v-for="n in 4"
+            :key="n"
+            class="rounded-borders col-2"
+            label="Short activity description"
+            @click="goToActivityDescription"
+          />
+          <div class="col-2"></div>
+        </div>
+      </q-carousel-slide>
+    </q-carousel>
+
+    <div class="row q-pt-lg">
+      <div class="col-1"></div>
+      <div class="col text-body1 text-weight-regular">All activities</div>
+    </div>
+    <div v-for="n in counter" :key="n">
+      <div
+        class="q-pt-lg row fit items-center q-gutter-xs q-col-gutter no-wrap"
+      >
+        <div class="col-2"></div>
+        <div v-if="status === 'loading'">Loading...</div>
+        <ActivityCard
+          v-else-if="status === 'success'"
+          class="col-2"
+          v-for="(act, index) in Object.values(data).slice((n - 1) * 4, n * 4)"
+          :title="act['activity_title']"
+          :target_age_group_left="act['target_age_group_left']"
+          :target_age_group_right="act['target_age_group_right']"
+          :key="index"
+          :ratingModel="ratingModel"
+          :text="lorem"
+        />
+        <div class="col-2"></div>
+      </div>
+      <div
+        class="q-pt-lg row fit justify-start items-center q-gutter-xs q-col-gutter no-wrap"
+      >
+        <div class="col-2"></div>
+        <q-btn
+          v-for="n in 4"
+          :key="n"
+          class="rounded-borders col-2"
+          label="Short activity description"
+        />
+
+        <div class="col-2"></div>
+      </div>
+    </div>
+
+    <div class="row reverse q-pr-lg">
+      <q-btn
+        v-if="status === 'success'"
+        flat
+        label="Show more"
+        @click="
+          counter =
+            counter * 4 < Object.values(data).length ? counter + 1 : counter
+        "
+      ></q-btn>
+    </div>
+
+short activity description button 21/02/2023
+
+<div
+          class="row fit justify-start items-center q-gutter-xs q-col-gutter no-wrap"
+        >
+          <div class="col-2"></div>
+          <q-btn
+            v-for="n in 4"
+            no-caps
+            :key="n"
+            class="rounded-borders col-2"
+            label="Short activity description"
+            @click="
+              goToActivityDescription(Object.values(data)[0]['activity_title'])
+            "
+          />
+          <div class="col-2"></div>
+        </div>
+
+
+q-pt-xl row fit items-center q-gutter-xs q-col-gutter no-wrap "class for all activities homepage"
+
+fit justify-start items-center q-gutter-xs q-col-gutter no-wrap "class for carousel activities homepage"
