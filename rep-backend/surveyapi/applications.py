@@ -7,6 +7,10 @@ CORS(app)
 app.config.from_object('config.BaseConfig')
 from models import db
 
+from api import api
+app.register_blueprint(api)
+
+
 db.init_app(app)
 
 if __name__ == '__main__':

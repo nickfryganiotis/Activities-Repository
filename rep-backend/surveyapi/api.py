@@ -9,17 +9,16 @@
 
 from flask import request
 from models import db, Activity, Activity_competence, Activity_translation, Competence
-from applications import app
-
+from flask import Blueprint
 #app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
 
+api = Blueprint('api', __name__)
 
-
-@app.route('/')
+@api.route('/')
 def index():
     return 'Hello, World!'
 
-@app.route('/create_activity', methods=['POST'])
+@api.route('/create_activity', methods=['POST'])
 def create_activity():
     if request.method=='POST':
         data = request.json
@@ -52,7 +51,7 @@ def create_activity():
         return "Error"
 
 
-@app.route('/create_competence', methods=['POST'])
+@api.route('/create_competence', methods=['POST'])
 def create_competence():
         if request.method=="POST":
             data = request.json
@@ -66,7 +65,7 @@ def create_competence():
         else:
             return "Error"
 
-@app.route('/get_activities', methods=['GET'])
+@api.route('/get_activities', methods=['GET'])
 def get_activities():
     if request.method=="GET":
         try:
@@ -89,7 +88,7 @@ def get_activities():
     else:
         return "Error"
 
-@app.route('/get_activity', methods=['GET'])
+@api.route('/get_activity', methods=['GET'])
 def get_activity():
     if request.method=="GET":
         id = request.args.get('activity_id')
