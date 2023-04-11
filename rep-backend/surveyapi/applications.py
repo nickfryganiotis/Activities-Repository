@@ -5,12 +5,11 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
 app.config.from_object('config.BaseConfig')
-from models import db
 
 from api import api
 app.register_blueprint(api)
 
-
+from models import db
 db.init_app(app)
 
 if __name__ == '__main__':
