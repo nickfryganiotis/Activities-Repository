@@ -1,0 +1,7 @@
+rep-backend/venv
+rep-backend/get-pip.py
+db/sql-scripts
+db/py-scripts
+db/db_relational_schema.pdf
+db/db_relational_schema_updated.png
+db/drop_database.bat
