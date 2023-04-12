@@ -7,11 +7,8 @@
       </div>
     </div>
 
-    <span v-if="isLoading">Loading...</span>
-    <span v-else-if="isError">Error: {{ error.message }}</span>
-<!-- We can assume by this point that `isSuccess === true` -->
-  <q-carousel
-      v-else
+    <q-carousel
+      v-if="status === 'success'"
       v-model="slide"
       transition-prev="slide-right"
       transition-next="slide-left"
@@ -64,11 +61,9 @@
     <div v-for="n in counter" :key="n">
       <div class="q-pt-xl row fit q-gutter-xs q-col-gutter no-wrap">
         <div class="col-2"></div>
-        <span v-if="isLoading">Loading...</span>
-        <span v-else-if="isError">Error: {{ error.message }}</span>
-        <!-- We can assume by this point that `isSuccess === true` -->
+        <div v-if="status === 'loading'">Loading...</div>
         <ActivityCard
-          v-else
+          v-else-if="status === 'success'"
           class="col-2"
           v-for="(activity, index) in Object.values(data).slice(
             (n - 1) * 4,
@@ -92,13 +87,10 @@
     </div>
 
     <div class="row justify-center q-pr-lg q-py-md">
-      <span v-if="isLoading">Loading...</span>
-    <span v-else-if="isError">Error: {{ error.message }}</span>
-    <!-- We can assume by this point that `isSuccess === true` -->
       <q-btn
-        v-else
         rounded
         push
+        v-if="status === 'success'"
         color="primary"
         icon="more_horiz"
         label="Show more"
@@ -115,7 +107,8 @@
 import { defineComponent, ref } from "vue";
 import ActivityCard from "src/components/ActivityCard.vue";
 import { useRouter, useRoute } from "vue-router";
-import { getActivities } from "../hooks/getActivities";
+import { getActivities } from "src/hooks/getActivities";
+import { useQuery } from "vue-query";
 
 export default defineComponent({
   name: "IndexPage",
@@ -140,8 +133,9 @@ export default defineComponent({
       return indices;
     }
 
-
-    const { isLoading, isError, data, error } = getActivities()
+    const { status, data, error } = useQuery("getActivities", getActivities, {
+      refetchOnMount: false,
+    });
 
     return {
       slide: ref(1),
@@ -155,8 +149,7 @@ export default defineComponent({
       getIndices,
       route,
       goToActivityDescription,
-      isLoading,
-      isError,
+      status,
       error,
       data,
     };

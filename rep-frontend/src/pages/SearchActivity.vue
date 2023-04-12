@@ -167,7 +167,7 @@
 <script>
 import { defineComponent, ref } from "vue";
 import ActivityCard from "src/components/ActivityCard.vue";
-import { api } from 'src/boot/axios'
+import { getActivities } from "src/hooks/getActivities";
 import { useQuery } from "vue-query";
 
 export default defineComponent({
@@ -175,16 +175,9 @@ export default defineComponent({
     ActivityCard,
   },
   setup() {
-    const getActivities = () =>
-        useQuery("getActivities", api.get('/get_activities').then((resp) => {
-    return resp.data;
-  })
-  .catch((error) => {
-    return error;
-  }), {refetchOnMount: false});
-
-  const { status, data, error } = getActivities();
-
+    const { status, data, error } = useQuery("getActivities", getActivities, {
+      refetchOnMount: false,
+    });
     return {
       ph: ref(""),
       checkboxes: ref({
