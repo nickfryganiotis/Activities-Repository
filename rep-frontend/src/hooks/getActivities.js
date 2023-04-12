@@ -1,14 +1,6 @@
-import axios from "axios";
+import { api } from "src/boot/coreAxios";
 
-export const getActivities = () =>
-  axios
-    .get("http://localhost:5000/get_activities")
-    .then((resp) => {
-      return resp.data;
-    })
-    .catch((error) => {
-      return error;
-    });
+export const getActivities = () => api.get("/get_activities");
 
 export const getActivity = async () => {
   //act_id = route.params.activityId;

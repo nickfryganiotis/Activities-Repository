@@ -107,7 +107,7 @@
 import { defineComponent, ref } from "vue";
 import ActivityCard from "src/components/ActivityCard.vue";
 import { useRouter, useRoute } from "vue-router";
-import { getActivities } from "src/hooks/getActivities";
+import { getActivities } from "src/boot/api/getActivities";
 import { useQuery } from "vue-query";
 
 export default defineComponent({
