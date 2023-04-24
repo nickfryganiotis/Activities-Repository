@@ -100,6 +100,7 @@
         "
       ></q-btn>
     </div>
+    <div>{{ actss.pageParams }}</div>
   </q-page>
 </template>
 
@@ -108,7 +109,7 @@ import { defineComponent, ref } from "vue";
 import ActivityCard from "src/components/ActivityCard.vue";
 import { useRouter, useRoute } from "vue-router";
 import { getActivities } from "src/boot/api/getActivities";
-import { useQuery } from "vue-query";
+import { useQuery, useInfiniteQuery } from "vue-query";
 
 export default defineComponent({
   name: "IndexPage",
@@ -137,6 +138,11 @@ export default defineComponent({
       refetchOnMount: false,
     });
 
+    const { data: actss = [] } = useInfiniteQuery(
+      "ggetActivities",
+      getActivities
+    );
+
     return {
       slide: ref(1),
       showMore: ref(false),
@@ -152,6 +158,7 @@ export default defineComponent({
       status,
       error,
       data,
+      actss,
     };
   },
 });
