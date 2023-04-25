@@ -100,7 +100,22 @@
         "
       ></q-btn>
     </div>
-    <div>{{ actss.pageParams }}</div>
+
+    <span v-if="iL">Loading...</span>
+    <span v-else-if="iE">Error: {{ ee.message }}</span>
+    <div v-else>
+      <span v-if="iF && !iFNP">Fetching...</span>
+      <ul v-for="(ac, index) in actss.pages" :key="index">
+        {{
+          ac
+        }}
+      </ul>
+      <button @click="() => fNP()" :disabled="!hNP || iFNP">
+        <span v-if="iFNP">Loading more...</span>
+        <span v-else-if="hNP">Load More</span>
+        <span v-else>Nothing more to load</span>
+      </button>
+    </div>
   </q-page>
 </template>
 
@@ -108,7 +123,10 @@
 import { defineComponent, ref } from "vue";
 import ActivityCard from "src/components/ActivityCard.vue";
 import { useRouter, useRoute } from "vue-router";
-import { getActivities } from "src/boot/api/getActivities";
+import {
+  getActivities,
+  getActivitiesPerPage,
+} from "src/boot/api/getActivities";
 import { useQuery, useInfiniteQuery } from "vue-query";
 
 export default defineComponent({
@@ -138,10 +156,18 @@ export default defineComponent({
       refetchOnMount: false,
     });
 
-    const { data: actss = [] } = useInfiniteQuery(
-      "ggetActivities",
-      getActivities
-    );
+    const {
+      data: actss,
+      error: ee,
+      fetchNextPage: fNP,
+      hasNextPage: hNP,
+      isFetching: iF,
+      isFetchingNextPage: iFNP,
+      isLoading: iL,
+      isError: iE,
+    } = useInfiniteQuery("ggetActivities", getActivitiesPerPage, {
+      getNextPageParam: (lastPage, pages) => lastPage.nextCursor,
+    });
 
     return {
       slide: ref(1),
@@ -159,6 +185,13 @@ export default defineComponent({
       error,
       data,
       actss,
+      ee,
+      fNP,
+      hNP,
+      iF,
+      iFNP,
+      iL,
+      iE,
     };
   },
 });

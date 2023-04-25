@@ -105,7 +105,18 @@ def get_activity():
     else:
         return "Error"
 
-
+@api.route('/get_activities_per_page', methods=['GET'])
+def get_activities_per_page():
+    if request.method=="GET":
+        try:
+            cursor = int(request.args.get('cursor'))
+            acts = Activity.query.offset((cursor - 1) * 4).limit(4).all()
+            acts_to_dict = [x.to_dict() for x in acts]
+            return acts_to_dict
+        except:
+            return "Error"
+    else:
+        return "Error"
 
 # In this example, the db.create_all() method is called within the context of the Flask application, 
 # which allows it to access the db object that was created using Flask-SQLAlchemy and 
