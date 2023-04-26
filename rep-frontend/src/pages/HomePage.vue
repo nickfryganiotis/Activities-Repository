@@ -104,17 +104,33 @@
     <span v-if="iL">Loading...</span>
     <span v-else-if="iE">Error: {{ ee.message }}</span>
     <div v-else>
+      <div class="row q-pt-lg">
+        <div class="col-1"></div>
+        <div class="col text-h5 text-weight-regular">All activities</div>
+      </div>
       <span v-if="iF && !iFNP">Fetching...</span>
-      <ul v-for="(ac, index) in actss.pages" :key="index">
-        {{
-          ac
-        }}
-      </ul>
-      <button @click="() => fNP()" :disabled="!hNP || iFNP">
-        <span v-if="iFNP">Loading more...</span>
-        <span v-else-if="hNP">Load More</span>
-        <span v-else>Nothing more to load</span>
-      </button>
+      <div v-for="(ac, index) in actss.pages" :key="index">
+        <div class="q-pt-xl row fit q-gutter-xs q-col-gutter no-wrap">
+          <div class="col-2"></div>
+          <span class="col-2" v-for="(project, index) in ac.pages" :key="index">
+            {{ project }}
+          </span>
+        </div>
+      </div>
+
+      <div class="row justify-center q-pr-lg q-py-md">
+        <q-btn
+          rounded
+          push
+          color="primary"
+          @click="() => fNP()"
+          :disabled="!hNP || iFNP"
+        >
+          <span v-if="iFNP">Loading more...</span>
+          <span v-else-if="hNP">Load More</span>
+          <span v-else>Nothing more to load</span>
+        </q-btn>
+      </div>
     </div>
   </q-page>
 </template>
