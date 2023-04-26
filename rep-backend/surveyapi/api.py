@@ -110,9 +110,12 @@ def get_activities_per_page():
     if request.method=="GET":
         try:
             cursor = int(request.args.get('cursor'))
-            acts = Activity.query.offset((cursor - 1) * 4).limit(4).all()
-            acts_to_dict = [x.to_dict() for x in acts]
-            return acts_to_dict
+            acts_win = Activity.query.offset((cursor - 1) * 4).limit(4).all()
+            acts_to_dict = [x.to_dict() for x in acts_win]
+            acts_nextWin = Activity.query.offset(cursor  * 4).limit(4).all()
+            if len(acts_nextWin) == 0:
+                return {"pages": acts_to_dict}
+            return {"pages": acts_to_dict, "nextCursor": cursor + 1}
         except:
             return "Error"
     else:
