@@ -112,9 +112,22 @@
       <div v-for="(ac, index) in actss.pages" :key="index">
         <div class="q-pt-xl row fit q-gutter-xs q-col-gutter no-wrap">
           <div class="col-2"></div>
-          <span class="col-2" v-for="(project, index) in ac.pages" :key="index">
-            {{ project }}
-          </span>
+          <ActivityCard
+            class="col-2"
+            v-for="(activity, index) in ac.activities"
+            :id="activity['activity']['id']"
+            :title="
+              activity['activity_translations'] !== undefined
+                ? activity['activity_translations'][0]['title']
+                : undefined
+            "
+            :minAge="activity['activity']['min_age']"
+            :maxAge="activity['activity']['max_age']"
+            :key="index"
+            :ratingModel="ratingModel[0]"
+            :responses="responses[0]"
+            :activityCompetences="activity['activity_competences']"
+          />
         </div>
       </div>
 

@@ -110,12 +110,27 @@ def get_activities_per_page():
     if request.method=="GET":
         try:
             cursor = int(request.args.get('cursor'))
-            acts_win = Activity.query.offset((cursor - 1) * 4).limit(4).all()
-            acts_to_dict = [x.to_dict() for x in acts_win]
-            acts_nextWin = Activity.query.offset(cursor  * 4).limit(4).all()
-            if len(acts_nextWin) == 0:
-                return {"pages": acts_to_dict}
-            return {"pages": acts_to_dict, "nextCursor": cursor + 1}
+            activities = Activity.query.offset((cursor - 1) * 4).limit(5).all()
+            next_cursor = -1
+            if len(activities) > 4:
+                activities.pop()
+                next_cursor = cursor + 1
+            activities_dict = []
+            for activity in activities:
+                act = activity.to_dict()
+                act_competences=Activity_competence.query.filter(Activity_competence.activity_id==act["id"]).all()
+
+                act_competences_codes = []
+                for act_competence in act_competences:
+                    act_competence_code = Competence.query.filter_by(id=act_competence.competence_id).first().code
+                    act_competences_codes.append(act_competence_code)
+                act_obj_transl = Activity_translation.query.filter(Activity_translation.activity_id==act["id"]).all()
+                act_transl = [x.to_dict() for x in act_obj_transl]
+                activities_dict.append({"activity": act, "activity_competences": act_competences_codes, "activity_translations": act_transl})
+            
+            if next_cursor == - 1:
+                return {"activities": activities_dict}
+            return {"activities": activities_dict, "nextCursor": cursor + 1}
         except:
             return "Error"
     else:
