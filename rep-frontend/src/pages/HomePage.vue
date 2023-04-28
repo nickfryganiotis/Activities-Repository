@@ -109,12 +109,12 @@
         <div class="col text-h5 text-weight-regular">All activities</div>
       </div>
       <span v-if="iF && !iFNP">Fetching...</span>
-      <div v-for="(ac, index) in actss.pages" :key="index">
+      <div v-for="(ac, i) in actss.pages" :key="i">
         <div class="q-pt-xl row fit q-gutter-xs q-col-gutter no-wrap">
           <div class="col-2"></div>
           <ActivityCard
             class="col-2"
-            v-for="(activity, index) in ac.activities"
+            v-for="(activity, j) in ac.activities"
             :id="activity['activity']['id']"
             :title="
               activity['activity_translations'] !== undefined
@@ -123,9 +123,9 @@
             "
             :minAge="activity['activity']['min_age']"
             :maxAge="activity['activity']['max_age']"
-            :key="index"
-            :ratingModel="ratingModel[0]"
-            :responses="responses[0]"
+            :key="j"
+            :ratingModel="ratingModel[i * 4 + j]"
+            :responses="responses[i * 4 + j]"
             :activityCompetences="activity['activity_competences']"
           />
         </div>
