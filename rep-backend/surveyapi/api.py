@@ -10,6 +10,7 @@
 from flask import request
 from models import db, Activity, Activity_competence, Activity_translation, Competence
 from flask import Blueprint
+from sqlalchemy import or_, and_
 #app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
 
 api = Blueprint('api', __name__)
@@ -65,6 +66,38 @@ def create_competence():
         else:
             return "Error"
 
+@api.route('/filter_activities', methods=['POST'])
+def filter_activities():
+    if request.method=="POST":
+        data = request.json
+        query_parameters = []   # Set a tuple variable for the query conjuction parameters 
+
+        # Activity attributes
+        query_parameters.append(or_(*[Activity.periodicity == periodicity for periodicity in data['periodicity']]))     
+        query_parameters.append(or_(*[and_(Activity.min_age == min_age, Activity.max_age == max_age)
+                                       for (min_age, max_age) in [tuple([int(x) for x in age_target_group_case])
+                                                        for age_target_group_case in [age_target_group.split('-')
+                                                                for age_target_group in data['age_target_group']]]]))
+        duration_to_num = {"one": 1, "two":2, "three": 3, "four": 4}
+        query_parameters.append(or_(*[Activity.duration == duration_to_num[duration.split(' ')[0]] for duration in data['duration']]))
+        sub_grouping_to_num = {"group": -1, "individual": 0, "whole": 0}
+        query_parameters.append(or_(*[Activity.sub_grouping == sub_grouping_to_num[sub_grouping.split(' ')[0]] 
+                                   for sub_grouping in data['sub_grouping']]))
+        if not data['teacher_role'] == "":
+            query_parameters.append(Activity.teacher_role == data['teacher_role']) 
+
+        print(*query_parameters)
+
+        # Filtering query execution 
+        query = and_(*query_parameters)
+        try:
+             activities = Activity.query.filter(query).all()
+             return [x.to_dict() for x in activities]
+        except:
+            return "Error"
+    else:
+        return "Error"
+
 @api.route('/get_activities', methods=['GET'])
 def get_activities():
     if request.method=="GET":
@@ -81,7 +114,8 @@ def get_activities():
                     act_competences_codes.append(act_competence_code)
                 act_obj_transl = Activity_translation.query.filter(Activity_translation.activity_id==act["id"]).all()
                 act_transl = [x.to_dict() for x in act_obj_transl]
-                activities_dict.append({"activity": act, "activity_competences": act_competences_codes, "activity_translations": act_transl})
+                activities_dict.append({"activity": act, "activity_competences": act_competences_codes, 
+                                        "activity_translations": act_transl})
             return activities_dict
         except:
             return "Error"    
@@ -126,8 +160,8 @@ def get_activities_per_page():
                     act_competences_codes.append(act_competence_code)
                 act_obj_transl = Activity_translation.query.filter(Activity_translation.activity_id==act["id"]).all()
                 act_transl = [x.to_dict() for x in act_obj_transl]
-                activities_dict.append({"activity": act, "activity_competences": act_competences_codes, "activity_translations": act_transl})
-            
+                activities_dict.append({"activity": act, "activity_competences": act_competences_codes, 
+                                        "activity_translations": act_transl})
             if next_cursor == - 1:
                 return {"activities": activities_dict}
             return {"activities": activities_dict, "nextCursor": cursor + 1}
