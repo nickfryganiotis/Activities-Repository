@@ -54,53 +54,6 @@
       </q-carousel-slide>
     </q-carousel>
 
-    <div class="row q-pt-lg">
-      <div class="col-1"></div>
-      <div class="col text-h5 text-weight-regular">All activities</div>
-    </div>
-    <div v-for="n in counter" :key="n">
-      <div class="q-pt-xl row fit q-gutter-xs q-col-gutter no-wrap">
-        <div class="col-2"></div>
-        <div v-if="status === 'loading'">Loading...</div>
-        <ActivityCard
-          v-else-if="status === 'success'"
-          class="col-2"
-          v-for="(activity, index) in Object.values(data).slice(
-            (n - 1) * 4,
-            n * 4
-          )"
-          :id="activity['activity']['id']"
-          :title="
-            activity['activity_translations'] !== undefined
-              ? activity['activity_translations'][0]['title']
-              : undefined
-          "
-          :minAge="activity['activity']['min_age']"
-          :maxAge="activity['activity']['max_age']"
-          :key="index"
-          :ratingModel="ratingModel[(n - 1) * 4 + index]"
-          :responses="responses[(n - 1) * 4 + index]"
-          :activityCompetences="activity['activity_competences']"
-        />
-        <div class="col-2"></div>
-      </div>
-    </div>
-
-    <div class="row justify-center q-pr-lg q-py-md">
-      <q-btn
-        rounded
-        push
-        v-if="status === 'success'"
-        color="primary"
-        icon="more_horiz"
-        label="Show more"
-        @click="
-          counter =
-            counter * 4 < Object.values(data).length ? counter + 1 : counter
-        "
-      ></q-btn>
-    </div>
-
     <span v-if="iL">Loading...</span>
     <span v-else-if="iE">Error: {{ ee.message }}</span>
     <div v-else>
@@ -200,8 +153,6 @@ export default defineComponent({
 
     return {
       slide: ref(1),
-      showMore: ref(false),
-      counter: ref(1),
       ratingModel: ref([2, 1, 2, 2, 1, 4, 3, 2, 1, 3, 3, 2, 1, 3, 2, 2]),
       responses: ref([
         205, 102, 205, 205, 102, 404, 317, 205, 102, 317, 317, 205, 102, 317,
