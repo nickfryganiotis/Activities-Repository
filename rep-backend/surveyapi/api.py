@@ -8,7 +8,7 @@
 # but you don't have access to a request context.
 
 from flask import request
-from models import db, Activity, Activity_competence, Activity_translation, Competence
+from models import db, Activity, Activity_competence, Activity_translation, Competence, User
 from flask import Blueprint
 from sqlalchemy import or_, and_
 #app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
@@ -173,3 +173,38 @@ def get_activities_per_page():
 # In this example, the db.create_all() method is called within the context of the Flask application, 
 # which allows it to access the db object that was created using Flask-SQLAlchemy and 
 # the configuration for the application.
+
+@api.route('/login', methods = ['POST'])
+def login():
+    if request.method == 'POST':
+        data = request.json
+    try:
+        # TODO: Hash the password...
+
+        # Depending on the data given in the input field, the user is searched in the database
+        if (data['username']):
+            user = User.query.filter_by(username = data['username']).first()
+        elif (data['email']):
+            user = User.query.filter_by(email = data['email']).first()
+
+        # If the user is found and the password is correct, the user is returned
+        if user and user.password_hash == data['password_hash']:
+            return user.to_dict()
+        else:
+            return "Error"
+    except:
+        return "Error"
+    
+@api.route('/signup', methods = ['POST'])
+def signup():
+    if request.method == 'POST':
+        data = request.json
+        user = User(data)
+
+        print(user.password_hash)
+
+    try:
+        db.session.add(user)
+        db.session.commit()
+    except:
+        return "Error"

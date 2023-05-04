@@ -8,6 +8,11 @@ const routes = [
         component: () => import("pages/HomePage.vue"),
       },
       {
+        path: "/login",
+        name: "Login",
+        component: () => import("pages/LoginPage.vue"),
+      },
+      {
         path: "/search_activity",
         component: () => import("pages/SearchActivity.vue"),
       },

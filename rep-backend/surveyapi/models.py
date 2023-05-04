@@ -148,4 +148,52 @@ class Special_need(db.Model):
     code = db.Column(db.String(255), nullable=False)
     activity_special_need = db.relationship('Activity_special_need', backref='activity_special_need')
 
+
+from enum import Enum
+class Authority_level(Enum):
+    STUDENT = 1
+    TEACHER = 2
+    ADMIN = 3
+
+# Why not "from flask_sqlalchemy import db"?
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    email = db.Column(db.String(255), nullable = False, unique = True)
+    first_name = db.Column(db.String(255), nullable = False)
+    middle_name = db.Column(db.String(255))
+    last_name = db.Column(db.String(255), nullable = False)
+    username = db.Column(db.String(255), nullable = False, unique = True)
+    password_hash = db.Column(db.String(255), nullable = False)
+    authority_level = db.Column(db.Enum(Authority_level), nullable = False)
+
+    def __init__(self, data):
+        if 'email' in data:
+            self.email = data['email']
+        if 'first_name' in data:
+            self.first_name = data['first_name']
+        if 'middle_name' in data:
+            self.middle_name = data['middle_name']
+        if 'last_name' in data:
+            self.last_name = data['last_name']
+        if 'username' in data:
+            self.username = data['username']
+        if 'password_hash' in data:
+            self.password_hash = data['password_hash']
+        if 'authority_level' in data:
+            self.authority_level = data["authority_level"]
+
+    def to_dict(self):
+        user = {}
+        user['id'] = self.id
+        user['email'] = self.email
+        user['first_name'] = self.first_name
+        user['middle_name'] = self.middle_name
+        user['last_name'] = self.last_name
+        user['username'] = self.username
+        user['password_hash'] = self.password_hash
+        user['authority_level'] = self.authority_level
+
+        return user
+
+  
   

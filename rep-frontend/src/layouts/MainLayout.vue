@@ -29,6 +29,11 @@
         <MenuBtn label="Home" @click="goToLandingPage" />
 
         <MenuBtn
+          label="Login"
+          @click="goToLoginPage"
+        />
+
+        <MenuBtn
           label="Create a new activity"
           @click="goToCreateActivityPage"
         />
@@ -91,6 +96,9 @@ export default defineComponent({
     const goToViewStrategies = () => {
       push("/strategies");
     };
+    const goToLoginPage = () => {
+      push("/login");
+    };
 
     return {
       leftDrawerOpen,
@@ -104,6 +112,7 @@ export default defineComponent({
       goToCreateActivityPage,
       goToViewCompetences,
       goToViewStrategies,
+      goToLoginPage,
     };
   },
 });
