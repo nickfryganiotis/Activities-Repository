@@ -1,4 +1,4 @@
-import { api } from "boot/coreAxios.js";
+import { api } from "src/http-client/coreAxios.js";
 
 export const getActivities = () => api.get("/get_activities");
 

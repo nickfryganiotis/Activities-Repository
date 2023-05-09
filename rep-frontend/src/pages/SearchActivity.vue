@@ -167,7 +167,7 @@
 <script>
 import { defineComponent, ref } from "vue";
 import ActivityCard from "src/components/ActivityCard.vue";
-import { getActivities } from "src/boot/api/getActivities";
+import { getActivities } from "src/http-client/api/getActivities";
 import { useQuery } from "vue-query";
 
 export default defineComponent({

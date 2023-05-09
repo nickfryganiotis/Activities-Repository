@@ -108,7 +108,7 @@ import { useRouter, useRoute } from "vue-router";
 import {
   getActivities,
   getActivitiesPerPage,
-} from "src/boot/api/getActivities";
+} from "src/http-client/api/getActivities";
 import { useQuery, useInfiniteQuery } from "vue-query";
 
 export default defineComponent({
