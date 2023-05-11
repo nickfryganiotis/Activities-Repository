@@ -13,8 +13,8 @@ const routes = [
         component: () => import("pages/LoginPage.vue"),
       },
       {
-        path: "/search_activity",
-        component: () => import("pages/SearchActivity.vue"),
+        path: "/activities",
+        component: () => import("src/pages/ActivitiesFiltering.vue"),
       },
       {
         path: "/create_activity",

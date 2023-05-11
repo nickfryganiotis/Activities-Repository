@@ -7,16 +7,50 @@
 # an object with configuration from your application,
 # but you don't have access to a request context.
 
+
 from flask import request
-from models import Activity, Activity_competence, Activity_translation, Competence
+from models import db, Activity, Activity_competence, Activity_translation, Competence
 from flask import Blueprint
 from sqlalchemy import or_, and_
 from helpers import duration_to_num, sub_grouping_to_num
 #app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
 
-get_activities_api = Blueprint('get_activities', __name__)
+activities = Blueprint('activities', __name__)
 
-@get_activities_api.route('/get_activities', methods=['GET'])
+@activities.route('/create_activity', methods=['POST'])
+def create_activity():
+    if request.method=='POST':
+        data = request.get_json()
+        new_activity = Activity(data['activity'])   
+        try:
+            db.session.add(new_activity)
+             #print(new_activity) 
+            db.session.commit()
+            #Activity.query.all()
+            for activity_translation in data['activity_translations']:
+                activity_translation['activity_id'] = new_activity.id
+                new_activity_translation = Activity_translation(activity_translation)
+                try:
+                    db.session.add(new_activity_translation)
+                    db.session.commit()
+                except:
+                    return "Error"
+            for activity_competence_code in data['activity_competences']:
+                competence_id = (Competence.query.filter_by(code=activity_competence_code)).first().id
+                new_activity_competence = Activity_competence({"activity_id": new_activity.id, "competence_id": competence_id})
+                try:
+                    db.session.add(new_activity_competence)
+                    db.session.commit()
+                except:
+                    return "Error"
+            return new_activity.to_dict()
+        except:
+            return "Error"    
+    else:
+        return "Error"
+
+
+@activities.route('/get_activities', methods=['GET'])
 def get_activities():
     if request.method=="GET":
         try:
@@ -41,7 +75,7 @@ def get_activities():
         return "Error"
     
 
-@get_activities_api.route('/get_activity', methods=['GET'])
+@activities.route('/get_activity', methods=['GET'])
 def get_activity():
     if request.method=="GET":
         id = request.args.get('activity_id')
@@ -58,7 +92,7 @@ def get_activity():
     else:
         return "Error"
     
-@get_activities_api.route('/get_activities_per_page', methods=['GET'])
+@activities.route('/get_activities_per_page', methods=['GET'])
 def get_activities_per_page():
     if request.method=="GET":
         try:
@@ -89,7 +123,7 @@ def get_activities_per_page():
     else:
         return "Error"
     
-@get_activities_api.route('/filter_activities', methods=['POST'])
+@activities.route('/filter_activities', methods=['POST'])
 def filter_activities():
     if request.method=="POST":
         data = request.get_json()

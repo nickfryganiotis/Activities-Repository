@@ -24,13 +24,14 @@
       <div class="q-pt-xs">
         {{ `${minAge} - ${maxAge} years old` }}
       </div>
-      <div class="row q-pt-xs text-negative">
+      <div class="row q-mt-xs text-negative">
         <div
           v-for="(activityCompetence, index) in activityCompetences"
+          class="q-pr-xs"
           :key="index"
           @click="getActivityDefinition($event)"
         >
-          {{ `${activityCompetence},` }}
+          {{ `${activityCompetence}, ` }}
         </div>
       </div>
     </q-card-section>

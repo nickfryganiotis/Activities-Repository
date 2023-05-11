@@ -28,23 +28,12 @@
 
         <MenuBtn label="Home" @click="goToLandingPage" />
 
-        <MenuBtn
-          label="Login"
-          @click="goToLoginPage"
-        />
-
-        <MenuBtn
-          label="Create a new activity"
-          @click="goToCreateActivityPage"
-        />
-
-        <MenuBtn
-          label="Search for an activity"
-          @click="goToSearchActivityPage"
-        />
+        <MenuBtn label="Activities" @click="goToActivitiesPage" />
 
         <MenuBtn label="Competences" @click="goToViewCompetences" />
         <MenuBtn label="Didactic strategies" @click="goToViewStrategies" />
+
+        <MenuBtn label="Login" @click="goToLoginPage" />
       </q-toolbar>
     </q-header>
 
@@ -84,12 +73,10 @@ export default defineComponent({
     const goToLandingPage = () => {
       push("/");
     };
-    const goToSearchActivityPage = () => {
-      push("/search_activity");
+    const goToActivitiesPage = () => {
+      push("/activities");
     };
-    const goToCreateActivityPage = () => {
-      push("/create_activity");
-    };
+
     const goToViewCompetences = () => {
       push("/competences");
     };
@@ -108,8 +95,7 @@ export default defineComponent({
       },
       route,
       goToLandingPage,
-      goToSearchActivityPage,
-      goToCreateActivityPage,
+      goToActivitiesPage,
       goToViewCompetences,
       goToViewStrategies,
       goToLoginPage,

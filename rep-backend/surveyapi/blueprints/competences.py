@@ -1,9 +1,9 @@
 from flask import request
 from models import db, Competence
 from flask import Blueprint
-create_subarrays_api = Blueprint('create_subarrays', __name__)
+competences = Blueprint('competences', __name__)
 
-@create_subarrays_api.route('/create_competence', methods=['POST'])
+@competences.route('/create_competence', methods=['POST'])
 def create_competence():
         if request.method=="POST":
             data = request.get_json()

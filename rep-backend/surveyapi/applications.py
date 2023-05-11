@@ -6,14 +6,12 @@ app = Flask(__name__)
 CORS(app)
 app.config.from_object('config.BaseConfig')
 
-from blueprints.create_activities_api import create_activities_api
-from blueprints.create_subarrays_api import create_subarrays_api
-from blueprints.get_activities_api import get_activities_api
-from blueprints.user_api import user_api
-app.register_blueprint(create_activities_api)
-app.register_blueprint(create_subarrays_api)
-app.register_blueprint(get_activities_api)
-app.register_blueprint(user_api)
+from blueprints.activities import activities
+from blueprints.competences import competences
+from blueprints.users import users
+app.register_blueprint(activities)
+app.register_blueprint(competences)
+app.register_blueprint(users)
 
 
 from models import db

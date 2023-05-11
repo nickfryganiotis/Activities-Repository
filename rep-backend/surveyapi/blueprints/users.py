@@ -3,9 +3,9 @@ from flask import request
 from models import db, User
 from flask import Blueprint
 
-user_api = Blueprint('user', __name__)
+users = Blueprint('users', __name__)
 
-@user_api.route('/login', methods = ['POST'])
+@users.route('/login', methods = ['POST'])
 def login():
     if request.method == 'POST':
         data = request.get_json()
@@ -26,7 +26,7 @@ def login():
     except:
         return "Error"
     
-@user_api.route('/signup', methods = ['POST'])
+@users.route('/signup', methods = ['POST'])
 def signup():
     if request.method == 'POST':
         data = request.get_json()
