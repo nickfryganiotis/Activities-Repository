@@ -31,7 +31,7 @@
           :key="index"
           @click="getActivityDefinition($event)"
         >
-          {{ `${activityCompetence}, ` }}
+          {{ `${activityCompetence},` }}
         </div>
       </div>
     </q-card-section>

@@ -12,6 +12,7 @@ from flask import request
 from models import db, Activity, Activity_competence, Activity_translation, Competence
 from flask import Blueprint
 from sqlalchemy import or_, and_
+from sqlalchemy.orm import joinedload
 from helpers import duration_to_num, sub_grouping_to_num
 #app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
 
@@ -123,6 +124,19 @@ def get_activities_per_page():
     else:
         return "Error"
     
+@activities.route('/test', methods = ['POST'])
+def test():
+    if request.method=="POST":
+        data = request.get_json()
+        query = db.session.query(Competence, Activity_competence).join(
+            Activity_competence, Competence.id == Activity_competence.competence_id).filter(
+            Competence.code.in_(data['competences'])
+            ).order_by(Activity_competence.activity_id)
+        query = query.options(joinedload(Competence.activity_competence))
+        results = query.all()
+        for competence, activity_competence,  in results:
+            print(competence.code, activity_competence.activity_id)
+        return "Hi"
 @activities.route('/filter_activities', methods=['POST'])
 def filter_activities():
     if request.method=="POST":
@@ -146,7 +160,7 @@ def filter_activities():
         # Filtering query execution 
         query = and_(*query_parameters)
         try:
-             activities = Activity.query.filter(query).all()
+             activities = Activity.query.filter(query).all() 
              return [x.to_dict() for x in activities]
         except:
             return "Error"
