@@ -22,7 +22,7 @@ activities = Blueprint('activities', __name__)
 def create_activity():
     if request.method=='POST':
         data = request.get_json()
-        new_activity = Activity(data['activity'])   
+        new_activity = Activity(**data['activity'])   
         try:
             db.session.add(new_activity)
              #print(new_activity) 
@@ -30,7 +30,7 @@ def create_activity():
             #Activity.query.all()
             for activity_translation in data['activity_translations']:
                 activity_translation['activity_id'] = new_activity.id
-                new_activity_translation = Activity_translation(activity_translation)
+                new_activity_translation = Activity_translation(**activity_translation)
                 try:
                     db.session.add(new_activity_translation)
                     db.session.commit()
@@ -128,14 +128,14 @@ def get_activities_per_page():
 def test():
     if request.method=="POST":
         data = request.get_json()
-        query = db.session.query(Competence, Activity_competence).join(
+        competences_query = db.session.query(Competence, Activity_competence).join(
             Activity_competence, Competence.id == Activity_competence.competence_id).filter(
             Competence.code.in_(data['competences'])
             ).order_by(Activity_competence.activity_id)
-        query = query.options(joinedload(Competence.activity_competence))
-        results = query.all()
-        for competence, activity_competence,  in results:
-            print(competence.code, activity_competence.activity_id)
+        competences_query = competences_query.options(joinedload(Competence.activity_competence))
+        competences_results = [(competence.code, activity_competence.activity_id) for competence, 
+                                activity_competence in competences_query.all()]
+        print(*competences_results)
         return "Hi"
 @activities.route('/filter_activities', methods=['POST'])
 def filter_activities():

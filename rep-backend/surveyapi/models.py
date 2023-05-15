@@ -24,29 +24,9 @@ class Activity(db.Model):
     activity_translation = db.relationship('Activity_translation', backref='translation_activity')
     activity_didactic_strategy = db.relationship('Activity_didactic_strategy', backref='didactic_activity')
 
-    def __init__(self, data):
-        if 'min_age' in data:
-            self.min_age = data['min_age']
-        if 'max_age' in data:
-            self.max_age = data['max_age']
-        if 'periodicity' in data:
-            self.periodicity = data['periodicity']
-        if 'duration' in data:
-            self.duration = data['duration']
-        if 'presence' in data:
-            self.presence = data['presence']
-        if 'sub_grouping' in data:
-            self.sub_grouping = data['sub_grouping']
-        if 'teacher_role' in data:
-            self.teacher_role = data['teacher_role']
-        if 'source' in data:
-            self.source = data['source']
-        if 'source_type' in data:
-            self.source_type = data['source_type']
-        if 'apriory' in data:
-            self.apriory = data['apriori']
-        if 'posteriory' in data:
-            self.posteriory = data['posteriory']
+    def __init__(self, **kwargs):
+        for key, value in kwargs.items():
+            setattr(self, key, value)
 
     def to_dict(self):
         activity = {}
@@ -76,21 +56,9 @@ class Activity_translation(db.Model):
     evaluation = db.Column(db.String(255))
     material = db.Column(db.String(255))
 
-    def __init__(self, data):
-        if 'activity_id' in data:
-            self.activity_id = data['activity_id']
-        if 'language_code' in data:
-            self.language_code = data['language_code']
-        if 'title' in data:
-            self.title = data['title']
-        if 'learning_objectives' in data:
-            self.learning_objectives = data['learning_objectives']
-        if 'description' in data:
-            self.description = data['description']
-        if 'evaluation' in data:
-            self.evaluation = data['evaluation']
-        if 'material' in data:
-            self.material = data['material']
+    def __init__(self, **kwargs):
+        for key, value in kwargs.items():
+            setattr(self, key, value)
     
     def to_dict(self):
         activity_translation = {}
