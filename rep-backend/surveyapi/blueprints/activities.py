@@ -22,31 +22,33 @@ activities = Blueprint('activities', __name__)
 def create_activity():
     if request.method=='POST':
         data = request.get_json()
-        new_activity = Activity(**data['activity'])   
-        try:
-            db.session.add(new_activity)
-             #print(new_activity) 
-            db.session.commit()
-            #Activity.query.all()
-            for activity_translation in data['activity_translations']:
-                activity_translation['activity_id'] = new_activity.id
-                new_activity_translation = Activity_translation(**activity_translation)
-                try:
-                    db.session.add(new_activity_translation)
-                    db.session.commit()
-                except:
-                    return "Error"
-            for activity_competence_code in data['activity_competences']:
-                competence_id = (Competence.query.filter_by(code=activity_competence_code)).first().id
-                new_activity_competence = Activity_competence({"activity_id": new_activity.id, "competence_id": competence_id})
-                try:
-                    db.session.add(new_activity_competence)
-                    db.session.commit()
-                except:
-                    return "Error"
-            return new_activity.to_dict()
-        except:
-            return "Error"    
+
+        new_activity = Activity(**data['activity'])        
+        
+        db.session.add(new_activity)
+        db.session.commit()
+        new_activity_translations = [
+                            Activity_translation(**activity_translation, activity_id = new_activity.id) for activity_translation 
+                                in data['activity_translations']
+        ]        
+            
+        db.session.add_all(new_activity_translations)
+        db.session.commit()
+            
+                        
+        competences_ids = Competence.query.with_entities(Competence.id).filter(
+                        Competence.code.in_(data['activity_competences'])
+        ).all()
+        competences_ids = [competence_id for (competence_id,) in competences_ids] 
+        new_activity_competences = [
+                  Activity_competence(activity_id=new_activity.id, competence_id=comp_id) for comp_id in competences_ids
+        ]
+            
+        db.session.add_all(new_activity_competences)
+        db.session.commit()
+                       
+        return new_activity.to_dict()    
+           
     else:
         return "Error"
 
@@ -128,14 +130,14 @@ def get_activities_per_page():
 def test():
     if request.method=="POST":
         data = request.get_json()
-        competences_query = db.session.query(Competence, Activity_competence).join(
+        competences_query = db.session.query(Competence.id).join(
             Activity_competence, Competence.id == Activity_competence.competence_id).filter(
             Competence.code.in_(data['competences'])
-            ).order_by(Activity_competence.activity_id)
-        competences_query = competences_query.options(joinedload(Competence.activity_competence))
-        competences_results = [(competence.code, activity_competence.activity_id) for competence, 
-                                activity_competence in competences_query.all()]
-        print(*competences_results)
+            ).order_by(Competence.id)
+        #competences_query = competences_query.options(joinedload(Competence.activity_competence))
+        #competences_results = [(competence.code, activity_competence.activity_id) for competence, 
+        #                        activity_competence in competences_query.all()]
+        print(competences_query)
         return "Hi"
 @activities.route('/filter_activities', methods=['POST'])
 def filter_activities():

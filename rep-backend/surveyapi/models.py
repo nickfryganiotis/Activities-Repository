@@ -77,21 +77,27 @@ class Activity_didactic_strategy(db.Model):
     activity_id = db.Column(db.Integer, db.ForeignKey('activity.id'))
     strategy_id = db.Column(db.Integer, db.ForeignKey('didactic_strategy.id'))
 
+    def __init__(self, **kwargs):
+        for key, value in kwargs.items():
+            setattr(self, key, value)
+
 class Didactic_strategy(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     code = db.Column(db.String(255), nullable=False)
     activity_didactic_strategy = db.relationship('Activity_didactic_strategy', backref='activity_didactic')
+
+    def __init__(self, **kwargs):
+        for key, value in kwargs.items():
+            setattr(self, key, value)
 
 class Activity_competence(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     activity_id = db.Column(db.Integer, db.ForeignKey('activity.id'))
     competence_id = db.Column(db.Integer, db.ForeignKey('competence.id'))
     
-    def __init__(self, data):
-        if 'activity_id' in data:
-            self.activity_id = data['activity_id']
-        if 'competence_id' in data:
-            self.competence_id = data['competence_id']
+    def __init__(self, **kwargs):
+        for key, value in kwargs.items():
+            setattr(self, key, value)
     
     def to_dict(self):
         activity_competence = {}
@@ -106,15 +112,27 @@ class Competence(db.Model):
     code = db.Column(db.String(255), nullable=False)
     activity_competence = db.relationship('Activity_competence', backref='act_competence')
 
+    def __init__(self, **kwargs):
+        for key, value in kwargs.items():
+            setattr(self, key, value)
+
 class Activity_special_need(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     activity_id = db.Column(db.Integer, db.ForeignKey('activity.id'))
     special_need_id = db.Column(db.Integer, db.ForeignKey('special_need.id'))
 
+    def __init__(self, **kwargs):
+        for key, value in kwargs.items():
+            setattr(self, key, value)
+
 class Special_need(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     code = db.Column(db.String(255), nullable=False)
     activity_special_need = db.relationship('Activity_special_need', backref='activity_special_need')
+
+    def __init__(self, **kwargs):
+        for key, value in kwargs.items():
+            setattr(self, key, value)
 
 
 from enum import Enum
@@ -134,21 +152,9 @@ class User(db.Model):
     password_hash = db.Column(db.String(255), nullable = False)
     authority_level = db.Column(db.Enum(Authority_level), nullable = False)
 
-    def __init__(self, data):
-        if 'email' in data:
-            self.email = data['email']
-        if 'first_name' in data:
-            self.first_name = data['first_name']
-        if 'middle_name' in data:
-            self.middle_name = data['middle_name']
-        if 'last_name' in data:
-            self.last_name = data['last_name']
-        if 'username' in data:
-            self.username = data['username']
-        if 'password_hash' in data:
-            self.password_hash = data['password_hash']
-        if 'authority_level' in data:
-            self.authority_level = data["authority_level"]
+    def __init__(self, **kwargs):
+        for key, value in kwargs.items():
+            setattr(self, key, value)
 
     def to_dict(self):
         user = {}

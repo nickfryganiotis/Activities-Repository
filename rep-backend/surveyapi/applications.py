@@ -8,9 +8,11 @@ app.config.from_object('config.BaseConfig')
 
 from blueprints.activities import activities
 from blueprints.competences import competences
+from blueprints.didactic_strategies import didactic_strategies
 from blueprints.users import users
 app.register_blueprint(activities)
 app.register_blueprint(competences)
+app.register_blueprint(didactic_strategies)
 app.register_blueprint(users)
 
 
