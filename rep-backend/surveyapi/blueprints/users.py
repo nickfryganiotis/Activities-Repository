@@ -30,12 +30,10 @@ def login():
 def signup():
     if request.method == 'POST':
         data = request.get_json()
-        user = User(data)
-
-        print(user.password_hash)
-
-    try:
+        user = User(**data)
+           
         db.session.add(user)
         db.session.commit()
-    except:
-        return "Error"
+
+        return {"user_id":user.id}
+    

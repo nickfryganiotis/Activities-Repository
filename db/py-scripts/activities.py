@@ -1,116 +1,116 @@
 activities = [
-    {"activity": {"min_age": 13, "max_age": 17}, 
-     "activity_translations": [
-        {"language_code": "en",  "title": "Make a kite", 
-        "description":"Bla Bla Bla Bla bla bla bla bla bla bla bla bla bla bla bla bla"}
-     ],
-     "activity_competences": ["relationships", "self-awareness", "flexibility"]   
-     }, 
-    {"activity": {"min_age": 6, "max_age": 8}, 
-     "activity_translations": [
-        {"language_code": "en",  "title": "Play Pictionary",
-         "description":"Bla Bla Bla Bla bla bla bla bla bla bla bla bla bla bla bla bla"}
-        ],
-     "activity_competences": ["optimism", "emotional regulation", "teamwork"]},
-    {"activity": {"min_age": 13, "max_age": 17}, 
-     "activity_translations": [
-        {"language_code": "en",  "title": "Sing the song",
-        "description":"Bla Bla Bla Bla bla bla bla bla bla bla bla bla bla bla bla bla"}
-        ],
-     "activity_competences": ["emotional expression", "self-motivation", "influence"]
-    },
-    {"activity": {"min_age": 6, "max_age": 8}, 
-     "activity_translations": [
-        {"language_code": "en",  "title": "Play pantomime",
-        "description":"Bla Bla Bla Bla bla bla bla bla bla bla bla bla bla bla bla bla"}
-     ], 
-     "activity_competences": ["teamwork", "relationships", "emotional regulation"]
-     },
-    {"activity":
-     {"min_age": 6, "max_age": 8},
-     "activity_translations": [
-        {"language_code": "en",  "title": "Solve crossword",
-        "description":"Bla Bla Bla Bla bla bla bla bla bla bla bla bla bla bla bla bla"}
-     ],
-     "activity_competences": ["flexibility", "assertiveness", "self-esteem"] 
-     },
-    {"activity": {"min_age": 6, "max_age": 8},
-     "activity_translations": [
-        {"language_code": "en",  "title": "Make lemonade",
-        "description":"Bla Bla Bla Bla bla bla bla bla bla bla bla bla bla bla bla bla"}
-     ],
-     "activity_competences": ["group emotional regulation", "empathy", "optimism"] 
-    },
-    {"activity":
-     {"min_age": 6, "max_age": 8}, 
-     "activity_translations": [
-        {"language_code": "en",  "title": "Play Tic tac toe",
-        "description":"Bla Bla Bla Bla bla bla bla bla bla bla bla bla bla bla bla bla"}
-     ], 
-     "activity_competences": ["group emotional awareness", "teamwork", "flexibility", ]},
-    {"activity": {"min_age": 6, "max_age": 8}, 
-     "activity_translations": [
-        {"language_code": "en",  "title": "Make a train",
-        "description":"Bla Bla Bla Bla bla bla bla bla bla bla bla bla bla bla bla bla"}
-     ],
-     "activity_competences": ["self-esteem","optimism", "assertiveness"]
-    },
-    {"activity": {"min_age": 6, "max_age": 8},
-     "activity_translations": [
-        {"language_code": "en",  "title": "Watch the movie",
-        "description":"Bla Bla Bla Bla bla bla bla bla bla bla bla bla bla bla bla bla"}
-     ], 
-     "activity_competences": ["self-awareness", "relationships", "self-esteem"]
-    },
-    {"activity": {"min_age": 6, "max_age": 8},
-     "activity_translations": [
-        {"language_code": "en",  "title": "Tell a joke",
-        "description":"Bla Bla Bla Bla bla bla bla bla bla bla bla bla bla bla bla bla"}
-     ], 
-     "activity_competences": ["optimism", "emotional regulation", "teamwork"]
-    },
-    {"activity": {"min_age": 6, "max_age": 8},
-     "activity_translations": [
-        {"language_code": "en",  "title": "Make a pie",
-        "description":"Bla Bla Bla Bla bla bla bla bla bla bla bla bla bla bla bla bla"}
-     ], 
-     "activity_competences": ["emotional expression", "self-motivation", "influence"]
-    },
-    {"activity": {"min_age": 6, "max_age": 8}, 
-     "activity_translations": [
-        {"language_code": "en",  "title": "Play battleship",
-        "description":"Bla Bla Bla Bla bla bla bla bla bla bla bla bla bla bla bla bla"}
-     ], 
-     "activity_competences": ["teamwork", "relationships", "emotional regulation"] 
-    },
-    {"activity":{"min_age": 13, "max_age": 17}, 
-     "activity_translations": [
-        {"language_code": "en",  "title": "Do yoga together",
-        "description":"Bla Bla Bla Bla bla bla bla bla bla bla bla bla bla bla bla bla"}
-     ],
-     "activity_competences": ["self-esteem", "group emotional regulation", "empathy"]
-    }, 
-    {"activity": {"min_age": 6, "max_age": 8}, 
-     "activity_translations": [
-        {"language_code": "en",  "title": "Play checkers",
-        "description":"Bla Bla Bla Bla bla bla bla bla bla bla bla bla bla bla bla bla"}
-     ],
-     "activity_competences": ["self-esteem", "optimism", "assertiveness"] 
-    },
-    {"activity": {"min_age": 13, "max_age": 17}, 
-     "activity_translations": [
-        {"language_code": "en",  "title": "Read the book",
-        "description":"Bla Bla Bla Bla bla bla bla bla bla bla bla bla bla bla bla bla"}
-     ],
-     "activity_competences": ["assertiveness", "self-esteem", "group emotional regulation"]
-    },
-    {"activity":{"min_age": 6, "max_age": 8}, 
-     "activity_translations": [
-        {"language_code": "en",  "title": "Make family tree",
-        "description":"Bla Bla Bla Bla bla bla bla bla bla bla bla bla bla bla bla bla"}
-     ],
-     "activity_competences": ["emotional expression", "self-motivation", "influence", ]
-    },
+   #  {"activity": {"min_age": 13, "max_age": 17}, 
+   #   "activity_translations": [
+   #      {"language_code": "en",  "title": "Make a kite", 
+   #      "description":"Bla Bla Bla Bla bla bla bla bla bla bla bla bla bla bla bla bla"}
+   #   ],
+   #   "activity_competences": ["relationships", "self-awareness", "flexibility"]   
+   #   }, 
+   #  {"activity": {"min_age": 6, "max_age": 8}, 
+   #   "activity_translations": [
+   #      {"language_code": "en",  "title": "Play Pictionary",
+   #       "description":"Bla Bla Bla Bla bla bla bla bla bla bla bla bla bla bla bla bla"}
+   #      ],
+   #   "activity_competences": ["optimism", "emotional regulation", "teamwork"]},
+   #  {"activity": {"min_age": 13, "max_age": 17}, 
+   #   "activity_translations": [
+   #      {"language_code": "en",  "title": "Sing the song",
+   #      "description":"Bla Bla Bla Bla bla bla bla bla bla bla bla bla bla bla bla bla"}
+   #      ],
+   #   "activity_competences": ["emotional expression", "self-motivation", "influence"]
+   #  },
+   #  {"activity": {"min_age": 6, "max_age": 8}, 
+   #   "activity_translations": [
+   #      {"language_code": "en",  "title": "Play pantomime",
+   #      "description":"Bla Bla Bla Bla bla bla bla bla bla bla bla bla bla bla bla bla"}
+   #   ], 
+   #   "activity_competences": ["teamwork", "relationships", "emotional regulation"]
+   #   },
+   #  {"activity":
+   #   {"min_age": 6, "max_age": 8},
+   #   "activity_translations": [
+   #      {"language_code": "en",  "title": "Solve crossword",
+   #      "description":"Bla Bla Bla Bla bla bla bla bla bla bla bla bla bla bla bla bla"}
+   #   ],
+   #   "activity_competences": ["flexibility", "assertiveness", "self-esteem"] 
+   #   },
+   #  {"activity": {"min_age": 6, "max_age": 8},
+   #   "activity_translations": [
+   #      {"language_code": "en",  "title": "Make lemonade",
+   #      "description":"Bla Bla Bla Bla bla bla bla bla bla bla bla bla bla bla bla bla"}
+   #   ],
+   #   "activity_competences": ["group emotional regulation", "empathy", "optimism"] 
+   #  },
+   #  {"activity":
+   #   {"min_age": 6, "max_age": 8}, 
+   #   "activity_translations": [
+   #      {"language_code": "en",  "title": "Play Tic tac toe",
+   #      "description":"Bla Bla Bla Bla bla bla bla bla bla bla bla bla bla bla bla bla"}
+   #   ], 
+   #   "activity_competences": ["group emotional awareness", "teamwork", "flexibility", ]},
+   #  {"activity": {"min_age": 6, "max_age": 8}, 
+   #   "activity_translations": [
+   #      {"language_code": "en",  "title": "Make a train",
+   #      "description":"Bla Bla Bla Bla bla bla bla bla bla bla bla bla bla bla bla bla"}
+   #   ],
+   #   "activity_competences": ["self-esteem","optimism", "assertiveness"]
+   #  },
+   #  {"activity": {"min_age": 6, "max_age": 8},
+   #   "activity_translations": [
+   #      {"language_code": "en",  "title": "Watch the movie",
+   #      "description":"Bla Bla Bla Bla bla bla bla bla bla bla bla bla bla bla bla bla"}
+   #   ], 
+   #   "activity_competences": ["self-awareness", "relationships", "self-esteem"]
+   #  },
+   #  {"activity": {"min_age": 6, "max_age": 8},
+   #   "activity_translations": [
+   #      {"language_code": "en",  "title": "Tell a joke",
+   #      "description":"Bla Bla Bla Bla bla bla bla bla bla bla bla bla bla bla bla bla"}
+   #   ], 
+   #   "activity_competences": ["optimism", "emotional regulation", "teamwork"]
+   #  },
+   #  {"activity": {"min_age": 6, "max_age": 8},
+   #   "activity_translations": [
+   #      {"language_code": "en",  "title": "Make a pie",
+   #      "description":"Bla Bla Bla Bla bla bla bla bla bla bla bla bla bla bla bla bla"}
+   #   ], 
+   #   "activity_competences": ["emotional expression", "self-motivation", "influence"]
+   #  },
+   #  {"activity": {"min_age": 6, "max_age": 8}, 
+   #   "activity_translations": [
+   #      {"language_code": "en",  "title": "Play battleship",
+   #      "description":"Bla Bla Bla Bla bla bla bla bla bla bla bla bla bla bla bla bla"}
+   #   ], 
+   #   "activity_competences": ["teamwork", "relationships", "emotional regulation"] 
+   #  },
+   #  {"activity":{"min_age": 13, "max_age": 17}, 
+   #   "activity_translations": [
+   #      {"language_code": "en",  "title": "Do yoga together",
+   #      "description":"Bla Bla Bla Bla bla bla bla bla bla bla bla bla bla bla bla bla"}
+   #   ],
+   #   "activity_competences": ["self-esteem", "group emotional regulation", "empathy"]
+   #  }, 
+   #  {"activity": {"min_age": 6, "max_age": 8}, 
+   #   "activity_translations": [
+   #      {"language_code": "en",  "title": "Play checkers",
+   #      "description":"Bla Bla Bla Bla bla bla bla bla bla bla bla bla bla bla bla bla"}
+   #   ],
+   #   "activity_competences": ["self-esteem", "optimism", "assertiveness"] 
+   #  },
+   #  {"activity": {"min_age": 13, "max_age": 17}, 
+   #   "activity_translations": [
+   #      {"language_code": "en",  "title": "Read the book",
+   #      "description":"Bla Bla Bla Bla bla bla bla bla bla bla bla bla bla bla bla bla"}
+   #   ],
+   #   "activity_competences": ["assertiveness", "self-esteem", "group emotional regulation"]
+   #  },
+   #  {"activity":{"min_age": 6, "max_age": 8}, 
+   #   "activity_translations": [
+   #      {"language_code": "en",  "title": "Make family tree",
+   #      "description":"Bla Bla Bla Bla bla bla bla bla bla bla bla bla bla bla bla bla"}
+   #   ],
+   #   "activity_competences": ["emotional expression", "self-motivation", "influence", ]
+   #  },
    #  {
    #    "activity":{"min_age": 13, "max_age": 18, "duration": 1, "periodicity": "one time activity", 
    #                "presence": "both", "sub_grouping": 0, "teacher_role": "leader", 
@@ -126,6 +126,247 @@ activities = [
    #    #                          "Group Emotional regulation", "Group Emotional Climate"
    #    #                         ]             
    #  }
+
+   {'activity': {'creator': 1,
+   'min_age': '13',
+   'max_age': '18',
+   'periodicity': 'One-off activity',
+   'duration': 'One lective hour (50min)',
+   'presence': 'both',
+   'sub_grouping': 'whole class',
+   'teacher_role': 'leader',
+   'source': 'Petrasek, M., Noltemeyer, A., James, A., Green J., Palmer, K., Ritchie, R. (2018). Activities to Enhance Student Motivation and Engagement., p. 13 (Ask Students about Their Futures)'},
+  'activity_translation': {'title': 'The future ME',
+   'description': 'Students are challenged to describe themselves 20 years in the future as part of a writing assignment. Students are then asked to describe the details of their life at this future point. ',
+   'short_description': 'Students are challenged to describe themselves 20 years in the future as part of a writing assignment. Students are then asked to describe the details of their life at this future point. ',
+   'learning_objectives': 'To increase the self-motivation level of learning, improve the self-motivation level of adopting positive behaviors with others and stimulate students’ reflection upon potential future self-improvement combined with realistic goal setting.',
+   'evaluation': 'The students present "the future selves", identifying the meaning, the concepts, the skills and the adaptation to the desired person.',
+   'materials': 'The 4 MAT* quadrants and specific questions are required (see EduCardia Working Sheet Template for students and for teachers).',
+   'language_code': 'en'},
+  'activity_competences': ['Emotional Regulation',
+    'Self-motivation',
+    'Teamwork'],
+  'activity_didactic_strategies':  ['Experiental learning',
+    'Collaborative learning',
+    'Case study learning'],
+  'activity_special_needs':  ['Specific learning disability (SLD)',
+    'Emotional disturbance',
+    'Visual impairment, including blindness']},
+ {'activity': {'creator': 1,
+   'min_age': '6',
+   'max_age': '8',
+   'periodicity': 'Periodically repeated',
+   'duration': 'Four lective hours',
+   'presence': 'online',
+   'sub_grouping': 'whole class',
+   'teacher_role': 'No',
+   'source': 'Myself'},
+  'activity_translation': {'title': 'Second Entry',
+   'description': 'Description',
+   'short_description': 'Description',
+   'learning_objectives': 'Nothing',
+   'evaluation': None,
+   'materials': 'Keys',
+   'language_code': 'en'},
+  'activity_competences':  ['Flexibility', 'Optimism'],
+  'activity_didactic_strategies': ['Experiental learning',
+    'Peer to peer learning',
+    'Gamification'],
+  'activity_special_needs':  ['Autism spectrum disorder (ASD)',
+    'Emotional disturbance',
+    'Intellectual disability']},
+ {'activity': {'creator': 1,
+   'min_age': '13',
+   'max_age': '18',
+   'periodicity': 'One-off activity',
+   'duration': 'One lective hour (50min)',
+   'presence': 'both',
+   'sub_grouping': 'whole class',
+   'teacher_role': 'leader',
+   'source': 'Petrasek, M., Noltemeyer, A., James, A., Green J., Palmer, K., Ritchie, R. (2018). Activities to Enhance Student Motivation and Engagement., p. 13 (Ask Students about Their Futures)'},
+  'activity_translation': {'title': 'The future ME',
+   'description': 'Students are challenged to describe themselves 20 years in the future as part of a writing assignment. Students are then asked to describe the details of their life at this future point. ',
+   'short_description': 'Students are challenged to describe themselves 20 years in the future as part of a writing assignment. Students are then asked to describe the details of their life at this future point. ',
+   'learning_objectives': 'To increase the self-motivation level of learning, improve the self-motivation level of adopting positive behaviors with others and stimulate students’ reflection upon potential future self-improvement combined with realistic goal setting.',
+   'evaluation': 'The students present "the future selves", identifying the meaning, the concepts, the skills and the adaptation to the desired person.',
+   'materials': 'The 4 MAT* quadrants and specific questions are required (see EduCardia Working Sheet Template for students and for teachers).',
+   'language_code': 'en'},
+  'activity_competences':  ['Emotional Regulation',
+    'Self-motivation',
+    'Teamwork'],
+  'activity_didactic_strategies': ['Experiental learning',
+    'Collaborative learning',
+    'Case study learning'],
+  'activity_special_needs': ['Specific learning disability (SLD)',
+    'Emotional disturbance',
+    'Visual impairment, including blindness']},
+ {'activity': {'creator': 1,
+   'min_age': '6',
+   'max_age': '8',
+   'periodicity': 'Periodically repeated',
+   'duration': 'Four lective hours',
+   'presence': 'online',
+   'sub_grouping': 'whole class',
+   'teacher_role': 'No',
+   'source': 'Myself'},
+  'activity_translation': {'title': 'Second Entry',
+   'description': 'Description',
+   'short_description': 'Description',
+   'learning_objectives': 'Nothing',
+   'evaluation': None,
+   'materials': 'Keys',
+   'language_code': 'en'},
+  'activity_competences': ['Flexibility', 'Optimism'],
+  'activity_didactic_strategies':  ['Experiental learning',
+    'Peer to peer learning',
+    'Gamification'],
+  'activity_special_needs': ['Autism spectrum disorder (ASD)',
+    'Emotional disturbance',
+    'Intellectual disability']},
+ {'activity': {'creator': 1,
+   'min_age': '13',
+   'max_age': '18',
+   'periodicity': 'One-off activity',
+   'duration': 'One lective hour (50min)',
+   'presence': 'both',
+   'sub_grouping': 'whole class',
+   'teacher_role': 'leader',
+   'source': 'Petrasek, M., Noltemeyer, A., James, A., Green J., Palmer, K., Ritchie, R. (2018). Activities to Enhance Student Motivation and Engagement., p. 13 (Ask Students about Their Futures)'},
+  'activity_translation': {'title': 'The future ME',
+   'description': 'Students are challenged to describe themselves 20 years in the future as part of a writing assignment. Students are then asked to describe the details of their life at this future point. ',
+   'short_description': 'Students are challenged to describe themselves 20 years in the future as part of a writing assignment. Students are then asked to describe the details of their life at this future point. ',
+   'learning_objectives': 'To increase the self-motivation level of learning, improve the self-motivation level of adopting positive behaviors with others and stimulate students’ reflection upon potential future self-improvement combined with realistic goal setting.',
+   'evaluation': 'The students present "the future selves", identifying the meaning, the concepts, the skills and the adaptation to the desired person.',
+   'materials': 'The 4 MAT* quadrants and specific questions are required (see EduCardia Working Sheet Template for students and for teachers).',
+   'language_code': 'en'},
+  'activity_competences':  ['Emotional Regulation',
+    'Self-motivation',
+    'Teamwork'],
+  'activity_didactic_strategies':  ['Experiental learning',
+    'Collaborative learning',
+    'Case study learning'],
+  'activity_special_needs': ['Specific learning disability (SLD)',
+    'Emotional disturbance',
+    'Visual impairment, including blindness']},
+ {'activity': {'creator': 1,
+   'min_age': '6',
+   'max_age': '8',
+   'periodicity': 'Periodically repeated',
+   'duration': 'Four lective hours',
+   'presence': 'online',
+   'sub_grouping': 'whole class',
+   'teacher_role': 'No',
+   'source': 'Myself'},
+  'activity_translation': {'title': 'Second Entry',
+   'description': 'Description',
+   'short_description': 'Description',
+   'learning_objectives': 'Nothing',
+   'evaluation': None,
+   'materials': 'Keys',
+   'language_code': 'en'},
+  'activity_competences': ['Flexibility', 'Optimism'],
+  'activity_didactic_strategies':  ['Experiental learning',
+    'Peer to peer learning',
+    'Gamification'],
+  'activity_special_needs': ['Autism spectrum disorder (ASD)',
+    'Emotional disturbance',
+    'Intellectual disability']},
+ {'activity': {'creator': 1,
+   'min_age': '13',
+   'max_age': '18',
+   'periodicity': 'One-off activity',
+   'duration': 'One lective hour (50min)',
+   'presence': 'both',
+   'sub_grouping': 'whole class',
+   'teacher_role': 'leader',
+   'source': 'Petrasek, M., Noltemeyer, A., James, A., Green J., Palmer, K., Ritchie, R. (2018). Activities to Enhance Student Motivation and Engagement., p. 13 (Ask Students about Their Futures)'},
+  'activity_translation': {'title': 'The future ME',
+   'description': 'Students are challenged to describe themselves 20 years in the future as part of a writing assignment. Students are then asked to describe the details of their life at this future point. ',
+   'short_description': 'Students are challenged to describe themselves 20 years in the future as part of a writing assignment. Students are then asked to describe the details of their life at this future point. ',
+   'learning_objectives': 'To increase the self-motivation level of learning, improve the self-motivation level of adopting positive behaviors with others and stimulate students’ reflection upon potential future self-improvement combined with realistic goal setting.',
+   'evaluation': 'The students present "the future selves", identifying the meaning, the concepts, the skills and the adaptation to the desired person.',
+   'materials': 'The 4 MAT* quadrants and specific questions are required (see EduCardia Working Sheet Template for students and for teachers).',
+   'language_code': 'en'},
+  'activity_competences': ['Emotional Regulation',
+    'Self-motivation',
+    'Teamwork'],
+  'activity_didactic_strategies': ['Experiental learning',
+    'Collaborative learning',
+    'Case study learning'],
+  'activity_special_needs': ['Specific learning disability (SLD)',
+    'Emotional disturbance',
+    'Visual impairment, including blindness']},
+ {'activity': {'creator': 1,
+   'min_age': '6',
+   'max_age': '8',
+   'periodicity': 'Periodically repeated',
+   'duration': 'Four lective hours',
+   'presence': 'online',
+   'sub_grouping': 'whole class',
+   'teacher_role': 'No',
+   'source': 'Myself'},
+  'activity_translation': {'title': 'Second Entry',
+   'description': 'Description',
+   'short_description': 'Description',
+   'learning_objectives': 'Nothing',
+   'evaluation': None,
+   'materials': 'Keys',
+   'language_code': 'en'},
+  'activity_competences':  ['Flexibility', 'Optimism'],
+  'activity_didactic_strategies': ['Experiental learning',
+    'Peer to peer learning',
+    'Gamification'],
+  'activity_special_needs': ['Autism spectrum disorder (ASD)',
+    'Emotional disturbance',
+    'Intellectual disability']},
+ {'activity': {'creator': 1,
+   'min_age': '13',
+   'max_age': '18',
+   'periodicity': 'One-off activity',
+   'duration': 'One lective hour (50min)',
+   'presence': 'both',
+   'sub_grouping': 'whole class',
+   'teacher_role': 'leader',
+   'source': 'Petrasek, M., Noltemeyer, A., James, A., Green J., Palmer, K., Ritchie, R. (2018). Activities to Enhance Student Motivation and Engagement., p. 13 (Ask Students about Their Futures)'},
+  'activity_translation': {'title': 'The future ME',
+   'description': 'Students are challenged to describe themselves 20 years in the future as part of a writing assignment. Students are then asked to describe the details of their life at this future point. ',
+   'short_description': 'Students are challenged to describe themselves 20 years in the future as part of a writing assignment. Students are then asked to describe the details of their life at this future point. ',
+   'learning_objectives': 'To increase the self-motivation level of learning, improve the self-motivation level of adopting positive behaviors with others and stimulate students’ reflection upon potential future self-improvement combined with realistic goal setting.',
+   'evaluation': 'The students present "the future selves", identifying the meaning, the concepts, the skills and the adaptation to the desired person.',
+   'materials': 'The 4 MAT* quadrants and specific questions are required (see EduCardia Working Sheet Template for students and for teachers).',
+   'language_code': 'en'},
+  'activity_competences':  ['Emotional Regulation',
+    'Self-motivation',
+    'Teamwork'],
+  'activity_didactic_strategies':  ['Experiental learning',
+    'Collaborative learning',
+    'Case study learning'],
+  'activity_special_needs': ['Specific learning disability (SLD)',
+    'Emotional disturbance',
+    'Visual impairment, including blindness']},
+ {'activity': {'creator': 1,
+   'min_age': '6',
+   'max_age': '8',
+   'periodicity': 'Periodically repeated',
+   'duration': 'Four lective hours',
+   'presence': 'online',
+   'sub_grouping': 'whole class',
+   'teacher_role': 'No',
+   'source': 'Myself'},
+  'activity_translation': {'title': 'Second Entry',
+   'description': 'Description',
+   'short_description': 'Description',
+   'learning_objectives': 'Nothing',
+   'evaluation': None,
+   'materials': 'Keys',
+   'language_code': 'en'},
+  'activity_competences': ['Flexibility', 'Optimism'],
+  'activity_didactic_strategies': ['Experiental learning',
+    'Peer to peer learning',
+    'Gamification'],
+  'activity_special_needs': ['Autism spectrum disorder (ASD)',
+    'Emotional disturbance',
+    'Intellectual disability']}
 ]
 
 

@@ -9,7 +9,7 @@
 
 
 from flask import request
-from models import db, Activity, Activity_competence, Activity_translation, Competence
+from models import db, Activity, Activity_competence, Activity_translation, Competence, Didactic_strategy, Activity_didactic_strategy, Special_need, Activity_special_need
 from flask import Blueprint
 from sqlalchemy import or_, and_
 from helpers import duration_to_num, sub_grouping_to_num
@@ -22,17 +22,21 @@ def create_activity():
     if request.method=='POST':
         data = request.get_json()
 
+        ## add activity attributes
+
         new_activity = Activity(**data['activity'])        
-        
+
         db.session.add(new_activity)
         db.session.commit()
-        new_activity_translations = [
-                            Activity_translation(**activity_translation, activity_id = new_activity.id) for activity_translation 
-                                in data['activity_translations']
-        ]        
+
+        ## add initial translation
+        
+        new_activity_translation = Activity_translation(**data['activity_translation'], activity_id = new_activity.id)  
             
-        db.session.add_all(new_activity_translations)
+        db.session.add(new_activity_translation)
         db.session.commit()
+
+        ## add activity competences
                         
         competences_ids = Competence.query.with_entities(Competence.id).\
                                 filter(Competence.code.in_(data['activity_competences'])).\
@@ -43,6 +47,32 @@ def create_activity():
         ]
             
         db.session.add_all(new_activity_competences)
+        db.session.commit()
+
+        ## add activity didactic strategies
+
+        strategies_ids = Didactic_strategy.query.with_entities(Didactic_strategy.id).\
+                                filter(Didactic_strategy.code.in_(data['activity_didactic_strategies'])).\
+                                    all()
+        strategies_ids = [strategy_id for (strategy_id,) in strategies_ids] 
+        new_activity_strategies = [
+                  Activity_didactic_strategy(activity_id=new_activity.id, strategy_id=str_id) for str_id in strategies_ids
+        ]
+            
+        db.session.add_all(new_activity_strategies)
+        db.session.commit()
+
+        ## add activity special needs
+
+        special_needs_ids = Special_need.query.with_entities(Special_need.id).\
+                                filter(Special_need.code.in_(data['activity_special_needs'])).\
+                                    all()
+        special_needs_ids = [special_need_id for (special_need_id,) in special_needs_ids] 
+        new_activity_special_needs = [
+                  Activity_special_need(activity_id=new_activity.id, special_need_id=sp_need_id) for sp_need_id in special_needs_ids
+        ]
+            
+        db.session.add_all(new_activity_special_needs)
         db.session.commit()
                        
         return new_activity.to_dict()    

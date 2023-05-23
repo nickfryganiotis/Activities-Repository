@@ -1,6 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
+from helpers import duration_to_num, sub_grouping_to_num
 
 db = SQLAlchemy()
 
@@ -25,7 +26,7 @@ class User(db.Model):
     stars = db.relationship('Stars', backref='evaluator')
     comments = db.relationship('Comments', backref='commenter')
 
-    def __init__(self, name, surname, sex, email, password,role):
+    def __init__(self, name, surname, sex, email, password, role):
         self.name = name
         self.surname = surname
         self.sex = sex
@@ -66,7 +67,12 @@ class Activity(db.Model):
 
     def __init__(self, *args, **kwargs):
         for key, value in kwargs.items():
-            setattr(self, key, value)
+            if key == 'duration':
+                setattr(self, key, duration_to_num(value))
+            elif key == 'sub_grouping':
+                setattr(self, key, sub_grouping_to_num(value))
+            else:
+                setattr(self, key, value)  
 
     def to_dict(self):
         return dict(id=self.id,
@@ -91,7 +97,7 @@ class Stars(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     value = db.Column(db.Integer)
     activity_id = db.Column(db.Integer, db.ForeignKey('activity.id'))
-    user_id = db.Columns(db.Integer, db.ForeignKey('users.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
     def __init__(self, *args, **kwargs):
         for key, value in kwargs.items():
@@ -104,7 +110,7 @@ class Comments(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     value = db.Column(db.String(500))
     activity_id = db.Column(db.Integer, db.ForeignKey('activity.id'))
-    user_id = db.Columns(db.Integer, db.ForeignKey('users.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
     def __init__(self, *args, **kwargs):
         for key, value in kwargs.items():
@@ -119,6 +125,7 @@ class Activity_translation(db.Model):
     title = db.Column(db.String(255))
     learning_objectives = db.Column(db.String(255))
     description = db.Column(db.String(255))
+    short_description = db.Column(db.String(255))
     evaluation = db.Column(db.String(255))
     material = db.Column(db.String(255))
 
@@ -134,7 +141,8 @@ class Activity_translation(db.Model):
                     learning_objectives=self.learning_objectives,
                     description=self.description,
                     evaluation=self.evaluation,
-                    material=self.material
+                    material=self.material,
+                    short_description=self.short_description
                 )    
        
 class Activity_didactic_strategy(db.Model):
