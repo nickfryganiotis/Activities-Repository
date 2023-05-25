@@ -1,7 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
-from helpers import duration_to_num, sub_grouping_to_num
+from helpers import duration_to_num, sub_grouping_to_num, num_to_duration, num_to_sub_grouping
 
 db = SQLAlchemy()
 
@@ -80,9 +80,9 @@ class Activity(db.Model):
                     min_age=self.min_age,
                     max_age=self.max_age,
                     periodicity=self.periodicity, 
-                    duration=self.duration,
+                    duration=num_to_duration(self.duration),
                     presence=self.presence,
-                    sub_grouping=self.sub_grouping,
+                    sub_grouping=num_to_sub_grouping(self.sub_grouping),
                     teacher_role=self.teacher_role,
                     source=self.source,
                     source_type=self.source_type,

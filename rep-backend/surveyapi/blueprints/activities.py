@@ -17,7 +17,7 @@ from helpers import duration_to_num, sub_grouping_to_num
 
 activities = Blueprint('activities', __name__)
 
-@activities.route('/create_activity', methods=['POST'])
+@activities.route('/create_activity/', methods=('POST',))
 def create_activity():
     if request.method=='POST':
         data = request.get_json()
@@ -122,21 +122,60 @@ def create_activity():
 #         return "Error"
     
 
-@activities.route('/get_activity', methods=['GET'])
-def get_activity():
-    if request.method=="GET":
-        id = request.args.get('activity_id')
-        act=(Activity.query.filter_by(id=id)).first().to_dict()
-        act_competences=Activity_competence.query.filter(Activity_competence.activity_id==id).all()
+@activities.route('/get_activity/<int:id>/<string:language_code>/', methods=('GET',))
+def get_activity(id, language_code):
+    if request.method=='GET':
 
-        act_competences_codes = []
-        for act_competence in act_competences:
-            act_competence_code = Competence.query.filter_by(id=act_competence.competence_id).first().code
-            act_competences_codes.append(act_competence_code)
-        act_obj_transl = Activity_translation.query.filter(Activity_translation.activity_id==act["id"]).all()
-        act_transl = [x.to_dict() for x in act_obj_transl]
-        return {"activity": act, "activity_competences": act_competences_codes, "activity_translations": act_transl} 
-    else:
+        ## get activity_comptences
+
+        activity_competences = db.session.query(Competence.code).\
+                            join(Activity_competence, Competence.id == Activity_competence.competence_id).\
+                                filter(Activity_competence.activity_id == id).all()
+            
+        activity_competences = [code for (code,) in activity_competences]
+
+        ## get activity_didactic_strategies
+
+        activity_didactic_strategies = db.session.query(Didactic_strategy.code).\
+                            join(Activity_didactic_strategy, Didactic_strategy.id == Activity_didactic_strategy.strategy_id).\
+                                filter(Activity_didactic_strategy.activity_id == id).all()
+            
+        activity_didactic_strategies = [code for (code,) in activity_didactic_strategies]
+
+        ## get activity_special_needs
+
+        activity_special_needs = db.session.query(Special_need.code).\
+                            join(Activity_special_need, Special_need.id == Activity_special_need.special_need_id).\
+                                filter(Activity_special_need.activity_id == id).all()
+            
+        activity_special_needs = [code for (code,) in activity_special_needs]
+
+        
+        activity_translation, activity = db.session.query(Activity_translation, Activity).\
+                                join(Activity, Activity_translation.activity_id == Activity.id).\
+                                    filter(Activity_translation.language_code == language_code, Activity.id == id).first()
+        
+        activity_translation = activity_translation.to_dict()        
+        activity = activity.to_dict()
+
+        #id = request.args.get('activity_id')
+        # act=(Activity.query.filter_by(id=id)).first().to_dict()
+        # act_competences=Activity_competence.query.filter(Activity_competence.activity_id==id).all()
+
+        # act_competences_codes = []
+        # for act_competence in act_competences:
+        #     act_competence_code = Competence.query.filter_by(id=act_competence.competence_id).first().code
+        #     act_competences_codes.append(act_competence_code)
+        # act_obj_transl = Activity_translation.query.filter(Activity_translation.activity_id==act["id"]).all()
+        # act_transl = [x.to_dict() for x in act_obj_transl]
+        # return {"activity": act, "activity_competences": act_competences_codes, "activity_translations": act_transl} 
+        return {    'activity_competences': activity_competences,
+                    'activity_didactic_strategies': activity_didactic_strategies,
+                    'activity_special_needs': activity_special_needs,
+                    'activity_translation': activity_translation,
+                    'activity': activity
+               }
+    else: 
         return "Error"
     
 @activities.route('/get_activities_per_page', methods=['GET'])
