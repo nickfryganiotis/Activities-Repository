@@ -4,3 +4,4 @@ db/sql-scripts
 db/db_relational_schema.pdf
 db/db_relational_schema_updated.png
 db/drop_database.bat
+**/__pycache__/
