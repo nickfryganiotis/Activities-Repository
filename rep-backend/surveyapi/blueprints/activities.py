@@ -163,6 +163,13 @@ def get_activity(id, language_code):
         activity_translation = activity_translation.to_dict()        
         activity = activity.to_dict()
 
+        ## get activity's creator name and surname
+
+        creator_name, creator_surname = db.session.query(User.name, User.surname).\
+                    join(Activity, User.id == Activity.creator).\
+                        filter(Activity.id == id).\
+                            first()
+        
         #id = request.args.get('activity_id')
         # act=(Activity.query.filter_by(id=id)).first().to_dict()
         # act_competences=Activity_competence.query.filter(Activity_competence.activity_id==id).all()
@@ -178,7 +185,8 @@ def get_activity(id, language_code):
                     'activity_didactic_strategies': activity_didactic_strategies,
                     'activity_special_needs': activity_special_needs,
                     'activity_translation': activity_translation,
-                    'activity': activity
+                    'activity': activity,
+                    'creator_fullname': f"{creator_name} {creator_surname}"
                }
     else: 
         return "Error"
@@ -197,11 +205,18 @@ def get_activities_per_page(cursor, language_code):
                                                         limit(11).\
                                                             subquery()
         
-        query = db.session.query(subquery.c.title, subquery.c.short_description, subquery.c.id, 
-                                 subquery.c.min_age, subquery.c.max_age, User.name).\
+        query = db.session.query(subquery.c.title, subquery.c.short_description, subquery.c.id, subquery.c.min_age, 
+                                 subquery.c.max_age, User.name, User.surname).\
                                     join(User, subquery.c.creator == User.id).\
                                         all()
+        
+        ## set next cursor
 
+        next_cursor = -1
+        if len(query) > 10:
+            query.pop()
+            next_cursor = cursor + 1
+        
         ## get activities' competences
 
         activities_ids = [col[2] for col in query]
@@ -212,15 +227,34 @@ def get_activities_per_page(cursor, language_code):
                                             order_by(Activity_competence.activity_id.asc()).\
                                                 all()
         
-        print(activity_competences)
+        activity_id = -1
+        competences = []
+        for competence in activity_competences:
+            if not activity_id == competence[1]:
+                competences.append([competence[0]])
+            else:
+                competences[-1].append(competence[0])
+            activity_id = competence[1]
+        
 
         activities = [
             {   'activity': 
-                    {'min_age': col[3], 'max_age': col[4], 'creator_name': col[5]},
-                'activity_translation': {'title': col[0], 'short_description': col[1]}
+                    {'min_age': col[3], 'max_age': col[4]},
+                'creator_fullname': 
+                    f"{col[5]} {col[6]}",
+                'activity_translation': 
+                    {'title': col[0], 'short_description': col[1]},
+                'activity_competences':
+                    competences[index]
             } 
-                    for col in query]
-        return activities
+                    for (index, col) in enumerate(query)
+        ]
+
+        if next_cursor == -1:
+            return {'activities': activities}
+        else:
+            return {'activities': activities, 'nextCursor': cursor + 1} 
+        
         # cursor = int(request.args.get('cursor'))
         # activities = Activity.query.offset((cursor - 1) * 4).limit(5).all()
         # next_cursor = -1
@@ -261,20 +295,26 @@ def test():
         #                        activity_competence in competences_query.all()]
         print(competences_query)
         return "Hi"
-@activities.route('/filter_activities', methods=['POST'])
+    
+
+@activities.route('/filter_activities/<int:cursor>/<string:language_code>/', methods=('POST',))
 def filter_activities():
     if request.method=="POST":
         data = request.get_json()
-        query_parameters = []   # Set a tuple variable for the query conjuction parameters 
 
-        # Activity attributes
+        ## Set a list variable for the query conjuction parameters 
+
+        query_parameters = []   
+
+        ## Activity attributes
+        
         query_parameters.append(or_(*[Activity.periodicity == periodicity for periodicity in data['periodicity']]))     
         query_parameters.append(or_(*[and_(Activity.min_age == min_age, Activity.max_age == max_age)
                                        for (min_age, max_age) in [tuple([int(x) for x in age_target_group_case])
                                                         for age_target_group_case in [age_target_group.split('-')
                                                                 for age_target_group in data['age_target_group']]]]))
-        query_parameters.append(or_(*[Activity.duration == duration_to_num(duration.split(' ')[0]) for duration in data['duration']]))
-        query_parameters.append(or_(*[Activity.sub_grouping == sub_grouping_to_num(sub_grouping.split(' ')[0]) 
+        query_parameters.append(or_(*[Activity.duration == duration_to_num(duration) for duration in data['duration']]))
+        query_parameters.append(or_(*[Activity.sub_grouping == sub_grouping_to_num(sub_grouping) 
                                    for sub_grouping in data['sub_grouping']]))
         if not data['teacher_role'] == "":
             query_parameters.append(Activity.teacher_role == data['teacher_role']) 
