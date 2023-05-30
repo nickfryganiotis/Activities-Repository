@@ -282,7 +282,7 @@ def get_activities_per_page(cursor, language_code):
     else:
         return "Error"
     
-@activities.route('/test', methods = ['POST'])
+@activities.route('/test', methods = ('POST', 'GET',))
 def test():
     if request.method=="POST":
         data = request.get_json()
@@ -295,6 +295,10 @@ def test():
         #                        activity_competence in competences_query.all()]
         print(competences_query)
         return "Hi"
+    elif request.method=='GET':
+        activity = Activity.query.filter_by(id=1).join(Activity_translation).filter_by(language_code='en').first()
+        print(activity.activity_translations[0].to_dict())
+        return "hi"
     
 
 @activities.route('/filter_activities/<int:cursor>/<string:language_code>/', methods=('POST',))
