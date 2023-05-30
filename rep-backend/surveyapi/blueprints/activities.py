@@ -80,114 +80,20 @@ def create_activity():
     else:
         return "Error"
 
-
-# @activities.route('/get_activities', methods=['GET'])
-# def get_activities():
-#     if request.method=="GET":
-#     #     subquery_comp = db.session.query(Competence.code, Activity_competence.activity_id).\
-#     #                         join(Activity_competence, Competence.id == Activity_competence.competence_id).\
-#     #                             subquery()
-#     #     subquery_act = db.session.query(Activity.id, Activity.min_age, Activity.max_age, 
-#     #                                     Activity_translation.title, Activity_translation.language_code, 
-#     #                                     Activity_translation.description).\
-#     #                                 join(Activity_translation, Activity.id == Activity_translation.activity_id).\
-#     #                                     subquery()
-#     #     query = db.session.query(subquery_act.c.id, subquery_act.c.min_age, subquery_act.c.max_age, 
-#     #                          subquery_act.c.title, subquery_act.c.language_code, 
-#     #                          subquery_act.c.description, subquery_comp.c.code).\
-#     #     join(subquery_comp, subquery_comp.c.activity_id == subquery_act.c.id).\
-#     #     order_by(subquery_act.c.id.asc()).all()
-#     #     for row in query:
-#     #         print(f"ID: {row.id}, Min Age: {row.min_age}, Max Age: {row.max_age}, Title: {row.title}, Language Code: {row.language_code}, Description: {row.description}, Competence Code: {row.code}")
-
-#     #     return 'Query executed successfully'
-              
-#         activities = Activity.query.all() 
-#         activities_dict = []
-#         for activity in activities:
-#                 act = activity.to_dict()
-#                 act_competences=Activity_competence.query.filter(Activity_competence.activity_id==act["id"]).all()
-                
-#                 act_competences_codes = []
-#                 for act_competence in act_competences:
-#                     act_competence_code = Competence.query.filter_by(id=act_competence.competence_id).first().code
-#                     act_competences_codes.append(act_competence_code)
-#                 act_obj_transl = Activity_translation.query.filter(Activity_translation.activity_id==act["id"]).all()
-#                 act_transl = [x.to_dict() for x in act_obj_transl]
-#                 activities_dict.append({"activity": act, "activity_competences": act_competences_codes, 
-#                                         "activity_translations": act_transl})
-#         return activities_dict
-            
-#     else:
-#         return "Error"
     
 
 @activities.route('/get_activity/<int:id>/<string:language_code>/', methods=('GET',))
 def get_activity(id, language_code):
     if request.method=='GET':
 
-        ## get activity's comptences
+        activity = Activity.query.\
+                        filter_by(id=id).\
+                            join(Activity_translation).\
+                                filter_by(language_code='en').\
+                                    first()
+        activity.to_dict()
+        return activity.to_dict()
 
-        activity_competences = db.session.query(Competence.code).\
-                                    join(Activity_competence, Competence.id == Activity_competence.competence_id).\
-                                        filter(Activity_competence.activity_id == id).\
-                                            all()
-            
-        activity_competences = [code for (code,) in activity_competences]
-
-        ## get activity's didactic strategies
-
-        activity_didactic_strategies = db.session.query(Didactic_strategy.code).\
-                                            join(Activity_didactic_strategy, Didactic_strategy.id == Activity_didactic_strategy.strategy_id).\
-                                                filter(Activity_didactic_strategy.activity_id == id).\
-                                                    all()
-            
-        activity_didactic_strategies = [code for (code,) in activity_didactic_strategies]
-
-        ## get activity's special needs
-
-        activity_special_needs = db.session.query(Special_need.code).\
-                                    join(Activity_special_need, Special_need.id == Activity_special_need.special_need_id).\
-                                        filter(Activity_special_need.activity_id == id).\
-                                            all()
-            
-        activity_special_needs = [code for (code,) in activity_special_needs]
-
-        ## get activity's translation and activity
-
-        activity_translation, activity = db.session.query(Activity_translation, Activity).\
-                                            join(Activity, Activity_translation.activity_id == Activity.id).\
-                                                filter(Activity_translation.language_code == language_code, Activity.id == id).\
-                                                    first()
-        
-        activity_translation = activity_translation.to_dict()        
-        activity = activity.to_dict()
-
-        ## get activity's creator name and surname
-
-        creator_name, creator_surname = db.session.query(User.name, User.surname).\
-                    join(Activity, User.id == Activity.creator).\
-                        filter(Activity.id == id).\
-                            first()
-        
-        #id = request.args.get('activity_id')
-        # act=(Activity.query.filter_by(id=id)).first().to_dict()
-        # act_competences=Activity_competence.query.filter(Activity_competence.activity_id==id).all()
-
-        # act_competences_codes = []
-        # for act_competence in act_competences:
-        #     act_competence_code = Competence.query.filter_by(id=act_competence.competence_id).first().code
-        #     act_competences_codes.append(act_competence_code)
-        # act_obj_transl = Activity_translation.query.filter(Activity_translation.activity_id==act["id"]).all()
-        # act_transl = [x.to_dict() for x in act_obj_transl]
-        # return {"activity": act, "activity_competences": act_competences_codes, "activity_translations": act_transl} 
-        return {    'activity_competences': activity_competences,
-                    'activity_didactic_strategies': activity_didactic_strategies,
-                    'activity_special_needs': activity_special_needs,
-                    'activity_translation': activity_translation,
-                    'activity': activity,
-                    'creator_fullname': f"{creator_name} {creator_surname}"
-               }
     else: 
         return "Error"
     
@@ -195,89 +101,29 @@ def get_activity(id, language_code):
 def get_activities_per_page(cursor, language_code):
     if request.method=='GET':
         
-        ## get activities and activities' translation per page
+        ## get activities
         
-        subquery = db.session.query(Activity_translation.title, Activity_translation.short_description, 
-                                        Activity.id, Activity.min_age, Activity.max_age, Activity.creator).\
-                                            join(Activity, Activity_translation.activity_id == Activity.id).\
-                                                filter(Activity_translation.language_code == language_code).\
+        activities = Activity.query.join(Activity_translation).\
+                                            filter_by(language_code=language_code).\
                                                     offset((cursor - 1) * 10).\
                                                         limit(11).\
-                                                            subquery()
-        
-        query = db.session.query(subquery.c.title, subquery.c.short_description, subquery.c.id, subquery.c.min_age, 
-                                 subquery.c.max_age, User.name, User.surname).\
-                                    join(User, subquery.c.creator == User.id).\
-                                        all()
+                                                            all()
         
         ## set next cursor
 
         next_cursor = -1
-        if len(query) > 10:
-            query.pop()
+        if len(activities) > 10:
+            activities.pop()
             next_cursor = cursor + 1
         
-        ## get activities' competences
-
-        activities_ids = [col[2] for col in query]
-
-        activity_competences = db.session.query(Competence.code, Activity_competence.activity_id).\
-                                    join(Activity_competence, Competence.id == Activity_competence.competence_id).\
-                                        filter(Activity_competence.activity_id.in_(activities_ids)).\
-                                            order_by(Activity_competence.activity_id.asc()).\
-                                                all()
-        
-        activity_id = -1
-        competences = []
-        for competence in activity_competences:
-            if not activity_id == competence[1]:
-                competences.append([competence[0]])
-            else:
-                competences[-1].append(competence[0])
-            activity_id = competence[1]
-        
-
         activities = [
-            {   'activity': 
-                    {'min_age': col[3], 'max_age': col[4]},
-                'creator_fullname': 
-                    f"{col[5]} {col[6]}",
-                'activity_translation': 
-                    {'title': col[0], 'short_description': col[1]},
-                'activity_competences':
-                    competences[index]
-            } 
-                    for (index, col) in enumerate(query)
+            activity.to_dict() for activity in activities
         ]
 
         if next_cursor == -1:
             return {'activities': activities}
         else:
             return {'activities': activities, 'nextCursor': cursor + 1} 
-        
-        # cursor = int(request.args.get('cursor'))
-        # activities = Activity.query.offset((cursor - 1) * 4).limit(5).all()
-        # next_cursor = -1
-        # if len(activities) > 4:
-        #     activities.pop()
-        #     next_cursor = cursor + 1
-        # activities_dict = []
-        # for activity in activities:
-        #     act = activity.to_dict()
-        #     act_competences=Activity_competence.query.filter(Activity_competence.activity_id==act["id"]).all()
-
-        #     act_competences_codes = []
-        #     for act_competence in act_competences:
-        #         act_competence_code = Competence.query.filter_by(id=act_competence.competence_id).first().code
-        #         act_competences_codes.append(act_competence_code)
-        #     act_obj_transl = Activity_translation.query.filter(Activity_translation.activity_id==act["id"]).all()
-        #     act_transl = [x.to_dict() for x in act_obj_transl]
-        #     activities_dict.append({"activity": act, "activity_competences": act_competences_codes, 
-        #                             "activity_translations": act_transl})
-        # if next_cursor == - 1:
-        #     return {"activities": activities_dict}
-        # return {"activities": activities_dict, "nextCursor": cursor + 1}
-        
         
     else:
         return "Error"

@@ -23,6 +23,7 @@ class User(db.Model):
     recoverHash = db.Column(db.String(255),  unique=False, nullable=True)
     recoverDate = db.Column(db.DateTime, nullable=True)
     activities = db.relationship('Activity', backref='activity_creator')
+    activity_translations = db.relationship('Activity_translation', backref='activity_translation_creator')
     stars = db.relationship('Stars', backref='evaluator')
     comments = db.relationship('Comments', backref='commenter')
 
@@ -54,8 +55,6 @@ class Activity(db.Model):
     apriory = db.Column(db.Integer, db.ForeignKey('activity.id'))
     posteriory = db.Column(db.Integer, db.ForeignKey('activity.id'))
     creator = db.Column(db.Integer, db.ForeignKey('users.id'))
-    #__table_args__ = (db.ForeignKeyConstraint([apriory], ['activity.id']),
-    #                  db.ForeignKeyConstraint([posteriory], ['activity.id']))
     has_apriory = db.relationship('Activity', foreign_keys = [apriory], remote_side = [id], backref='apriori_activity')
     has_posteriory = db.relationship('Activity', foreign_keys = [posteriory], remote_side = [id], backref= 'posteriory_activity')
     activity_translations = db.relationship('Activity_translation', backref='activity')
@@ -88,7 +87,11 @@ class Activity(db.Model):
                     source_type=self.source_type,
                     apriory=self.apriory,
                     posteriory=self.posteriory,
-                    creator=self.creator
+                    creator=self.creator,
+                    comptences=[competence.to_dict()['code'] for competence in self.activity_competences],
+                    didactic_strategies=[didactic_strategy.to_dict()['code'] for didactic_strategy in self.activity_didactic_strategies],
+                    special_needs=[special_need.to_dict()['code'] for special_need in self.activity_special_needs],
+                    activity_translations=[activity_translation.to_dict() for activity_translation in self.activity_translations]
                 ) 
     
 class Stars(db.Model):
@@ -121,6 +124,7 @@ class Activity_translation(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     activity_id = db.Column(db.Integer, db.ForeignKey('activity.id'))
+    creator = db.Column(db.Integer, db.ForeignKey('users.id'))
     language_code = db.Column(db.String(255))
     title = db.Column(db.String(255))
     learning_objectives = db.Column(db.String(255))
@@ -155,6 +159,14 @@ class Activity_didactic_strategy(db.Model):
     def __init__(self, *args, **kwargs):
         for key, value in kwargs.items():
             setattr(self, key, value)
+    
+    def to_dict(self):
+        return dict(id=self.id,
+                    activity_id=self.activity_id,
+                    strategy_id=self.strategy_id,
+                    code=self.didactic_strategy.code
+                   )
+
 
 class Didactic_strategy(db.Model):
     __tablename__ = 'didactic_strategy'
@@ -166,6 +178,11 @@ class Didactic_strategy(db.Model):
     def __init__(self, *args, **kwargs):
         for key, value in kwargs.items():
             setattr(self, key, value)
+    
+    def to_dict(self):
+        return dict(id=self.id,
+                    code=self.code
+                )    
 
 class Activity_competence(db.Model):
     __tablename__ = 'activity_competence'
@@ -179,9 +196,10 @@ class Activity_competence(db.Model):
             setattr(self, key, value)
     
     def to_dict(self):
-        return dict(id = self.id,
+        return dict(id=self.id,
                     activity_id=self.activity_id,
-                    competence_id = self.competence_id
+                    competence_id=self.competence_id,
+                    code=self.competence.code
                    )
 
 class Competence(db.Model):
@@ -194,7 +212,12 @@ class Competence(db.Model):
     def __init__(self, *args, **kwargs):
         for key, value in kwargs.items():
             setattr(self, key, value)
-
+    
+    def to_dict(self):
+        return dict(id=self.id,
+                    code=self.code
+                )    
+    
 class Activity_special_need(db.Model):
     __tablename__ = 'activity_special_need'
 
@@ -205,6 +228,13 @@ class Activity_special_need(db.Model):
     def __init__(self, *args, **kwargs):
         for key, value in kwargs.items():
             setattr(self, key, value)
+    
+    def to_dict(self):
+        return dict(id=self.id,
+                    activity_id=self.activity_id,
+                    special_need_id=self.special_need_id,
+                    code=self.special_need.code
+                   )
 
 class Special_need(db.Model):
     __tablename__ = 'special_need'
@@ -217,9 +247,8 @@ class Special_need(db.Model):
         for key, value in kwargs.items():
             setattr(self, key, value)
 
-
-
-
-
-  
-  
+    def to_dict(self):
+        return dict(id=self.id,
+                    code=self.code
+                )    
+ 
