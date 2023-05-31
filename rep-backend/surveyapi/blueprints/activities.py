@@ -117,7 +117,7 @@ def get_activities_per_page(cursor, language_code):
             next_cursor = cursor + 1
         
         activities = [
-            activity.to_dict() for activity in activities
+            activity.preview_to_dict() for activity in activities
         ]
 
         if next_cursor == -1:
@@ -142,7 +142,11 @@ def test():
         print(competences_query)
         return "Hi"
     elif request.method=='GET':
-        activity = Activity.query.filter_by(id=1).join(Activity_translation).filter_by(language_code='en').first()
+        activity = Activity.query.\
+                        filter_by(id=1).\
+                            join(Activity_translation).\
+                                filter_by(language_code='en').\
+                                    first()
         print(activity.activity_translations[0].to_dict())
         return "hi"
     

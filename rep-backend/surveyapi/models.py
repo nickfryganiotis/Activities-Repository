@@ -75,7 +75,7 @@ class Activity(db.Model):
 
     def to_dict(self):
         return dict(id=self.id,
-                    created_at=self.created_at,
+                    created_at=self.created_at.strftime('%Y-%m-%d %H:%M:%S'),
                     min_age=self.min_age,
                     max_age=self.max_age,
                     periodicity=self.periodicity, 
@@ -92,7 +92,16 @@ class Activity(db.Model):
                     didactic_strategies=[didactic_strategy.to_dict()['code'] for didactic_strategy in self.activity_didactic_strategies],
                     special_needs=[special_need.to_dict()['code'] for special_need in self.activity_special_needs],
                     activity_translations=[activity_translation.to_dict() for activity_translation in self.activity_translations]
-                ) 
+                )
+    
+    def preview_to_dict(self):
+        return dict(id=self.id,
+                    min_age=self.min_age,
+                    max_age=self.max_age,
+                    teacher_role=self.teacher_role,
+                    comptences=[competence.to_dict()['code'] for competence in self.activity_competences],
+                    activity_translations=[activity_translation.preview_to_dict() for activity_translation in self.activity_translations]
+                    ) 
     
 class Stars(db.Model):
     __tablename__ = 'stars'
@@ -129,7 +138,6 @@ class Activity_translation(db.Model):
     title = db.Column(db.String(255))
     learning_objectives = db.Column(db.String(255))
     description = db.Column(db.String(255))
-    short_description = db.Column(db.String(255))
     evaluation = db.Column(db.String(255))
     material = db.Column(db.String(255))
 
@@ -147,7 +155,15 @@ class Activity_translation(db.Model):
                     evaluation=self.evaluation,
                     material=self.material,
                     short_description=self.short_description
-                )    
+                )
+    
+    def preview_to_dict(self):
+        return dict(id=self.id,
+                    activity_id=self.activity_id,
+                    language_code=self.language_code,
+                    title=self.title,
+                    short_description=f"{self.description[:100]}..."
+                    )    
        
 class Activity_didactic_strategy(db.Model):
     __tablename__ = 'activity_didactic_strategy'
