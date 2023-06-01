@@ -128,7 +128,7 @@ def get_activities_per_page(cursor, language_code):
     else:
         return "Error"
     
-@activities.route('/test', methods = ('POST', 'GET',))
+@activities.route('/test/', methods=('POST', 'GET',))
 def test():
     if request.method=="POST":
         data = request.get_json()
@@ -149,7 +149,53 @@ def test():
                                     first()
         print(activity.activity_translations[0].to_dict())
         return "hi"
-    
+
+@activities.route('/test2/', methods=('GET',))
+def test2():
+    if request.method=='GET':
+        
+        competences = ["Emotional regulation", "Flexibility"]
+        didactic_strategies = ['Collaborative learning', 'Case study learning']
+
+        subquery_1 = db.session.\
+            query(Activity_competence.activity_id).\
+                join(Competence).\
+                    filter(Competence.code.in_(competences)).\
+                        group_by(Activity_competence.activity_id).\
+                            subquery()
+        subquery_2 = db.session.\
+            query(Activity_didactic_strategy.activity_id).\
+                join(Didactic_strategy).\
+                    filter(Didactic_strategy.code.in_(didactic_strategies)).\
+                        group_by(Activity_didactic_strategy.activity_id).\
+                            subquery()
+                            
+        subquery_12 = db.session.\
+                        query(subquery_1.c.activity_id).\
+                            join(subquery_2, subquery_1.c.activity_id==subquery_2.c.activity_id).\
+                                group_by(subquery_1.c.activity_id).subquery()
+        # print(subquery_12)
+        
+        # query = Activity.query.\
+        #         join(subquery_12).all()
+                       
+        activities = Activity.\
+                        query.\
+                            join(Activity_translation).\
+                                filter_by(language_code='en')
+                                    
+        if competences:
+            activities = activities.join(subquery_1)
+        
+        if didactic_strategies:
+            activities = activities.join(subquery_2)
+        
+        activities = activities.all()
+
+        print(activities)
+        return "hi"
+    else:
+        return "Error"     
 
 @activities.route('/filter_activities/<int:cursor>/<string:language_code>/', methods=('POST',))
 def filter_activities():

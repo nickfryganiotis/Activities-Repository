@@ -153,8 +153,7 @@ class Activity_translation(db.Model):
                     learning_objectives=self.learning_objectives,
                     description=self.description,
                     evaluation=self.evaluation,
-                    material=self.material,
-                    short_description=self.short_description
+                    material=self.material
                 )
     
     def preview_to_dict(self):
