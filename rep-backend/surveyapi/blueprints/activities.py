@@ -150,9 +150,106 @@ def test():
         print(activity.activity_translations[0].to_dict())
         return "hi"
 
-@activities.route('/test2/<string:language_code>/', methods=('POST',))
-def test2(language_code):
-    if request.method=='POST':
+# @activities.route('/test2/<int:cursor>/<string:language_code>/', methods=('POST',))
+# def test2(cursor, language_code):
+#     if request.method=='POST':
+        
+#         data = request.get_json()
+
+#         ## Set a list variable for the query conjuction parameters concerining of activity and activity_translation
+
+#         query_parameters = []   
+
+#         ## Activity attributes
+        
+#         query_parameters.append(or_(*[Activity.periodicity == periodicity for periodicity in data['periodicity']]))     
+#         query_parameters.append(or_(*[and_(Activity.min_age == min_age, Activity.max_age == max_age)
+#                                        for (min_age, max_age) in [tuple([int(x) for x in age_target_group_case])
+#                                                         for age_target_group_case in [age_target_group.split('-')
+#                                                                 for age_target_group in data['age_target_group']]]]))
+#         query_parameters.append(or_(*[Activity.duration == duration_to_num(duration) for duration in data['duration']]))
+#         query_parameters.append(or_(*[Activity.sub_grouping == sub_grouping_to_num(sub_grouping) 
+#                                    for sub_grouping in data['sub_grouping']]))
+#         if not data['teacher_role'] == "":
+#             query_parameters.append(Activity.teacher_role == data['teacher_role'])
+        
+#         ## Activity_translation attributes
+
+#         if not data['title'] == "":
+#             query_parameters.append(Activity_translation.title == data['title'])
+#         query_parameters.append(Activity_translation.language_code == language_code)
+                       
+#         activities = Activity.\
+#                         query.\
+#                             join(Activity_translation).\
+#                                 filter(and_(*query_parameters))
+                                    
+#         ## Competences, Didactic strategies, Special needs
+        
+#         competences = data['competences']
+#         didactic_strategies = data['didactic_strategies']
+#         special_needs = data['special_needs']
+
+#         activity_competences = db.session.\
+#                                 query(Activity_competence.activity_id).\
+#                                     join(Competence).\
+#                                         filter(Competence.code.in_(competences)).\
+#                                             group_by(Activity_competence.activity_id).\
+#                                                 subquery()
+                
+#         activity_didactic_strategies = db.session.\
+#                                         query(Activity_didactic_strategy.activity_id).\
+#                                             join(Didactic_strategy).\
+#                                                 filter(Didactic_strategy.code.in_(didactic_strategies)).\
+#                                                     group_by(Activity_didactic_strategy.activity_id).\
+#                                                         subquery()
+        
+#         activity_special_needs = db.session.\
+#                                     query(Activity_special_need.activity_id).\
+#                                         join(Special_need).\
+#                                             filter(Special_need.code.in_(special_needs)).\
+#                                                 group_by(Activity_special_need.activity_id).\
+#                                                     subquery()
+        
+#         if competences:
+#             activities = activities.join(activity_competences)
+        
+#         if didactic_strategies:
+#             activities = activities.join(activity_didactic_strategies)
+        
+#         if special_needs:
+#             activities = activities.join(activity_special_needs)
+
+#         ## uncomment to print query
+#         # print(activities)    
+        
+#         activities = activities.\
+#                         offset((cursor - 1) * 10).\
+#                             limit(11).\
+#                                 all()
+
+#         ## set next cursor
+
+#         next_cursor = -1
+#         if len(activities) > 10:
+#             activities.pop()
+#             next_cursor = cursor + 1
+        
+#         activities = [
+#             activity.preview_to_dict() for activity in activities
+#         ]
+
+#         if next_cursor == -1:
+#             return {'activities': activities}
+#         else:
+#             return {'activities': activities, 'nextCursor': cursor + 1} 
+        
+#     else:
+#         return "Error"     
+
+@activities.route('/filter_activities/<int:cursor>/<string:language_code>/', methods=('POST',))
+def filter_activities(cursor, language_code):
+    if request.method=="POST":
         
         data = request.get_json()
 
@@ -223,42 +320,26 @@ def test2(language_code):
         ## uncomment to print query
         # print(activities)    
         
-        activities = activities.all()
+        activities = activities.\
+                        offset((cursor - 1) * 10).\
+                            limit(11).\
+                                all()
 
-        return {"activities": [activity.to_dict() for activity in activities]}
+        ## set next cursor
+
+        next_cursor = -1
+        if len(activities) > 10:
+            activities.pop()
+            next_cursor = cursor + 1
+        
+        activities = [
+            activity.preview_to_dict() for activity in activities
+        ]
+
+        if next_cursor == -1:
+            return {'activities': activities}
+        else:
+            return {'activities': activities, 'nextCursor': cursor + 1} 
+        
     else:
         return "Error"     
-
-@activities.route('/filter_activities/<int:cursor>/<string:language_code>/', methods=('POST',))
-def filter_activities():
-    if request.method=="POST":
-        data = request.get_json()
-
-        ## Set a list variable for the query conjuction parameters 
-
-        query_parameters = []   
-
-        ## Activity attributes
-        
-        query_parameters.append(or_(*[Activity.periodicity == periodicity for periodicity in data['periodicity']]))     
-        query_parameters.append(or_(*[and_(Activity.min_age == min_age, Activity.max_age == max_age)
-                                       for (min_age, max_age) in [tuple([int(x) for x in age_target_group_case])
-                                                        for age_target_group_case in [age_target_group.split('-')
-                                                                for age_target_group in data['age_target_group']]]]))
-        query_parameters.append(or_(*[Activity.duration == duration_to_num(duration) for duration in data['duration']]))
-        query_parameters.append(or_(*[Activity.sub_grouping == sub_grouping_to_num(sub_grouping) 
-                                   for sub_grouping in data['sub_grouping']]))
-        if not data['teacher_role'] == "":
-            query_parameters.append(Activity.teacher_role == data['teacher_role']) 
-
-        print(*query_parameters)
-
-        # Filtering query execution 
-        query = and_(*query_parameters)
-        try:
-             activities = Activity.query.filter(query).all() 
-             return [x.to_dict() for x in activities]
-        except:
-            return "Error"
-    else:
-        return "Error"
