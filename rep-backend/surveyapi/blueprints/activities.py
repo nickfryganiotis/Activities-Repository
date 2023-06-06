@@ -267,8 +267,7 @@ def filter_activities(cursor, language_code):
         query_parameters.append(or_(*[Activity.duration == duration_to_num(duration) for duration in data['duration']]))
         query_parameters.append(or_(*[Activity.sub_grouping == sub_grouping_to_num(sub_grouping) 
                                    for sub_grouping in data['sub_grouping']]))
-        if not data['teacher_role'] == "":
-            query_parameters.append(Activity.teacher_role == data['teacher_role'])
+        query_parameters.append(or_(*[Activity.teacher_role == teacher_role for teacher_role in data['teacher_role']]))
         
         ## Activity_translation attributes
 
