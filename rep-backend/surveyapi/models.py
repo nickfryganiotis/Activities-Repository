@@ -103,6 +103,11 @@ class Activity(db.Model):
                     activity_translations=[activity_translation.preview_to_dict() for activity_translation in self.activity_translations]
                     ) 
     
+    def update(self, *args, **kwargs):
+        for key, value in kwargs.items():
+            setattr(self, key, value)
+        return True
+
 class Stars(db.Model):
     __tablename__ = 'stars'
 
@@ -162,7 +167,12 @@ class Activity_translation(db.Model):
                     language_code=self.language_code,
                     title=self.title,
                     short_description=f"{self.description[:100]}..."
-                    )    
+                    )
+    
+    def update(self, *args, **kwargs):
+        for key, value in kwargs.items():
+            setattr(self, key, value)
+        return True
        
 class Activity_didactic_strategy(db.Model):
     __tablename__ = 'activity_didactic_strategy'

@@ -10,7 +10,7 @@
 
 from flask import request
 from models import db, Activity, Activity_competence, Activity_translation, Competence, Didactic_strategy, Activity_didactic_strategy, Special_need, Activity_special_need, User
-from flask import Blueprint
+from flask import Blueprint, jsonify
 from sqlalchemy import or_, and_
 from helpers import duration_to_num, sub_grouping_to_num
 #app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
@@ -75,7 +75,7 @@ def create_activity():
         db.session.add_all(new_activity_special_needs)
         db.session.commit()
                        
-        return new_activity.to_dict()    
+        return jsonify(new_activity.to_dict()), 201   
            
     else:
         return "Error"
@@ -95,6 +95,33 @@ def get_activity(id, language_code):
         return activity.to_dict()
 
     else: 
+        return "Error"
+    
+#UD for Activity
+@activities.route('/activity/<int:id>/', methods=('PUT','DELETE',))
+def activity(id):
+
+    ## update the information of an activity
+    if request.method == 'PUT':
+        
+        data = request.get_json()
+        activity = Activity.query.get(id)
+        activity.update(**data) 
+        db.session.commit()
+        return jsonify(activity.to_dict()), 201
+    
+    ## delete an activity translation
+    elif request.method == 'DELETE':
+
+        activity = Activity.query.get(id)
+        if (activity==None):
+            return jsonify({ 'message': 'Activity already deleted', 'code': 'activityalreadyDeleted' }), 201
+        
+        db.session.delete(activity)
+        db.session.commit()
+        return jsonify(activity.to_dict()), 201
+    
+    else:
         return "Error"
     
 @activities.route('/get_activities_per_page/<int:cursor>/<string:language_code>/', methods=('GET',))
@@ -126,126 +153,9 @@ def get_activities_per_page(cursor, language_code):
             return {'activities': activities, 'nextCursor': cursor + 1} 
         
     else:
+
         return "Error"
-    
-@activities.route('/test/', methods=('POST', 'GET',))
-def test():
-    if request.method=="POST":
-        data = request.get_json()
-        competences_query = db.session.query(Competence.id).join(
-            Activity_competence, Competence.id == Activity_competence.competence_id).filter(
-            Competence.code.in_(data['competences'])
-            ).order_by(Competence.id)
-        #competences_query = competences_query.options(joinedload(Competence.activity_competence))
-        #competences_results = [(competence.code, activity_competence.activity_id) for competence, 
-        #                        activity_competence in competences_query.all()]
-        print(competences_query)
-        return "Hi"
-    elif request.method=='GET':
-        activity = Activity.query.\
-                        filter_by(id=1).\
-                            join(Activity_translation).\
-                                filter_by(language_code='en').\
-                                    first()
-        print(activity.activity_translations[0].to_dict())
-        return "hi"
 
-# @activities.route('/test2/<int:cursor>/<string:language_code>/', methods=('POST',))
-# def test2(cursor, language_code):
-#     if request.method=='POST':
-        
-#         data = request.get_json()
-
-#         ## Set a list variable for the query conjuction parameters concerining of activity and activity_translation
-
-#         query_parameters = []   
-
-#         ## Activity attributes
-        
-#         query_parameters.append(or_(*[Activity.periodicity == periodicity for periodicity in data['periodicity']]))     
-#         query_parameters.append(or_(*[and_(Activity.min_age == min_age, Activity.max_age == max_age)
-#                                        for (min_age, max_age) in [tuple([int(x) for x in age_target_group_case])
-#                                                         for age_target_group_case in [age_target_group.split('-')
-#                                                                 for age_target_group in data['age_target_group']]]]))
-#         query_parameters.append(or_(*[Activity.duration == duration_to_num(duration) for duration in data['duration']]))
-#         query_parameters.append(or_(*[Activity.sub_grouping == sub_grouping_to_num(sub_grouping) 
-#                                    for sub_grouping in data['sub_grouping']]))
-#         if not data['teacher_role'] == "":
-#             query_parameters.append(Activity.teacher_role == data['teacher_role'])
-        
-#         ## Activity_translation attributes
-
-#         if not data['title'] == "":
-#             query_parameters.append(Activity_translation.title == data['title'])
-#         query_parameters.append(Activity_translation.language_code == language_code)
-                       
-#         activities = Activity.\
-#                         query.\
-#                             join(Activity_translation).\
-#                                 filter(and_(*query_parameters))
-                                    
-#         ## Competences, Didactic strategies, Special needs
-        
-#         competences = data['competences']
-#         didactic_strategies = data['didactic_strategies']
-#         special_needs = data['special_needs']
-
-#         activity_competences = db.session.\
-#                                 query(Activity_competence.activity_id).\
-#                                     join(Competence).\
-#                                         filter(Competence.code.in_(competences)).\
-#                                             group_by(Activity_competence.activity_id).\
-#                                                 subquery()
-                
-#         activity_didactic_strategies = db.session.\
-#                                         query(Activity_didactic_strategy.activity_id).\
-#                                             join(Didactic_strategy).\
-#                                                 filter(Didactic_strategy.code.in_(didactic_strategies)).\
-#                                                     group_by(Activity_didactic_strategy.activity_id).\
-#                                                         subquery()
-        
-#         activity_special_needs = db.session.\
-#                                     query(Activity_special_need.activity_id).\
-#                                         join(Special_need).\
-#                                             filter(Special_need.code.in_(special_needs)).\
-#                                                 group_by(Activity_special_need.activity_id).\
-#                                                     subquery()
-        
-#         if competences:
-#             activities = activities.join(activity_competences)
-        
-#         if didactic_strategies:
-#             activities = activities.join(activity_didactic_strategies)
-        
-#         if special_needs:
-#             activities = activities.join(activity_special_needs)
-
-#         ## uncomment to print query
-#         # print(activities)    
-        
-#         activities = activities.\
-#                         offset((cursor - 1) * 10).\
-#                             limit(11).\
-#                                 all()
-
-#         ## set next cursor
-
-#         next_cursor = -1
-#         if len(activities) > 10:
-#             activities.pop()
-#             next_cursor = cursor + 1
-        
-#         activities = [
-#             activity.preview_to_dict() for activity in activities
-#         ]
-
-#         if next_cursor == -1:
-#             return {'activities': activities}
-#         else:
-#             return {'activities': activities, 'nextCursor': cursor + 1} 
-        
-#     else:
-#         return "Error"     
 
 @activities.route('/filter_activities/<int:cursor>/<string:language_code>/', methods=('POST',))
 def filter_activities(cursor, language_code):
@@ -341,4 +251,58 @@ def filter_activities(cursor, language_code):
             return {'activities': activities, 'nextCursor': cursor + 1} 
         
     else:
-        return "Error"     
+
+        return "Error"
+
+@activities.route('/create_translation/<int:activity_id>/', methods=('POST',))
+def create_translation(activity_id):
+    
+    ## add new translation
+    if request.method == 'POST':
+        
+        data = request.get_json()
+        
+        new_activity_translation = Activity_translation(**data['activity_translation'], activity_id = activity_id)  
+            
+        db.session.add(new_activity_translation)
+        db.session.commit()
+
+        return jsonify(new_activity_translation.to_dict()), 201
+    else:
+        
+        return "Error"
+
+#RUD for Activity translations
+@activities.route('/activity_translation/<int:id>/', methods=('GET','PUT','DELETE',))
+def activity_translation(id):
+    
+    ## get an activity translation
+    if request.method == 'GET':
+
+        activity_translation = Activity_translation.query.get(id)
+        return jsonify({'activity_translation': activity_translation.to_dict()})
+    
+    ## update the information of an activity translation
+    elif request.method == 'PUT':
+
+        data = request.get_json()
+        activity_translation = Activity_translation.query.get(id)
+        activity_translation.update(**data) 
+        db.session.commit()
+        return jsonify(activity_translation.to_dict()), 201
+    
+    ## delete an activity translation
+    elif request.method == 'DELETE':
+        
+        activity_translation = Activity_translation.query.get(id)
+        if (activity_translation==None):
+            return jsonify({ 'message': 'Activity translation already deleted', 'code': 'activityTranslationalreadyDeleted' }), 201
+        
+        db.session.delete(activity_translation)
+        db.session.commit()
+        return jsonify(activity_translation.to_dict()), 201
+    
+    else:
+
+        return "Error"
+     
