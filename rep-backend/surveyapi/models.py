@@ -88,7 +88,7 @@ class Activity(db.Model):
                     apriory=self.apriory,
                     posteriory=self.posteriory,
                     creator=self.creator,
-                    comptences=[competence.to_dict()['code'] for competence in self.activity_competences],
+                    competences=[competence.to_dict()['code'] for competence in self.activity_competences],
                     didactic_strategies=[didactic_strategy.to_dict()['code'] for didactic_strategy in self.activity_didactic_strategies],
                     special_needs=[special_need.to_dict()['code'] for special_need in self.activity_special_needs],
                     activity_translations=[activity_translation.to_dict() for activity_translation in self.activity_translations]
@@ -99,7 +99,7 @@ class Activity(db.Model):
                     min_age=self.min_age,
                     max_age=self.max_age,
                     teacher_role=self.teacher_role,
-                    comptences=[competence.to_dict()['code'] for competence in self.activity_competences],
+                    competences=[competence.to_dict()['code'] for competence in self.activity_competences],
                     activity_translations=[activity_translation.preview_to_dict() for activity_translation in self.activity_translations]
                     ) 
     

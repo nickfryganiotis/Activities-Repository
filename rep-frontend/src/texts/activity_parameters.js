@@ -26,7 +26,7 @@ export const parameters = {
         'weekly',
         'monthly',
         'quarterly',
-        'one-time'
+        'one time'
     ],
     'duration': [
         '1 hour',
@@ -36,14 +36,14 @@ export const parameters = {
     ],
     'presence': [
         'online',
-        'in-person',
+        'in person',
         'both'
     ],
     'subgrouping' : [
         'individual',
-        'small-group',
-        'large-group',
-        'whole-class'
+        'small group',
+        'large group',
+        'whole class'
     ],
     'teacherRole' : [
         'facilitator',

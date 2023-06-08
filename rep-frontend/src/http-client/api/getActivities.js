@@ -5,4 +5,4 @@ export const getFilteredActivities = (filter) => api.post("/filter_activities/1/
 export const getActivitiesPerPage = ({ pageParam = 1 }) =>
   api.get("/get_activities_per_page?cursor=" + pageParam);
 
-export const getActivityById = (id) => api.get("/get_activity", { params: { activity_id: id } });
+export const getActivityById = (id) => api.get(`/get_activity/${id}/en`);

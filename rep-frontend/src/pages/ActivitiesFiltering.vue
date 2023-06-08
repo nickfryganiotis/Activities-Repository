@@ -13,7 +13,7 @@
           <ActivitiesContainer 
             class = "col grid my-grid"
             :loading = "loading" 
-            :data = "filteredData" 
+            :data = "filteredData === undefined ? [] : filteredData.activities"
           />
           <!-- Filters menu -->
           <FiltersCard
@@ -52,7 +52,19 @@
   provide('setText', setText);
 
   const filters = ref(filtersDefinitions);       // Import filters and reference them
-  const filtersList = ref({});                   // Define a list of filters
+  const filtersList = ref({
+    title: '',
+    age_target_group: [],
+    competences: [],
+    duration: [],
+    didactic_strategies: [],
+    learning_objectives: [],
+    sub_grouping: [],
+    teacher_role: [],
+    periodicity: [],
+    presence: [],
+    special_needs: []
+  });                   // Define a list of filters
 
   // * Watch for changes in the filters
   watch([filters, text], _.debounce(() => {
@@ -100,16 +112,12 @@
 			const empty = Object.keys(filtersList.value).length == 0 ||
 				Object.values(filtersList.value).every(value => value.length == 0);
 
-      if (empty)
-        return getFilteredActivities([]);
-      else
         return getFilteredActivities(filtersList.value);
     },
   })
 
   // TODO: Remove this in deployment
-  watch(filteredData, () => { console.log(filteredData.value); });
-
+  watch(filteredData, () => { console.log(Object.values(filteredData)) });
 
 
 

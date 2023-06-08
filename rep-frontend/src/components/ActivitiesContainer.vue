@@ -17,11 +17,11 @@
         v-else
         class = "col-auto"
         v-for = "activity in props.data"
-        :key = "activity['activity']['id']"
-        :id = "activity['activity']['id']"
-        :title = "activity['activity_translations'][0]['title']"
-        :competences = "activity['activity_competences']"
-        :description = "activity['activity_translations'][0]['description']"
+        :key = "activity"
+        :id = "activity.id"
+        :title = "activity.activity_translations[0].title"
+        :competences = "activity.competences"
+        :description = "activity.activity_translations[0].short_description"
       />
     </div>
 </template>
