@@ -7,7 +7,7 @@ def num_to_duration(num):
     return mapping[num]
 
 def sub_grouping_to_num(sub_grouping):
-    mapping = {"small": -1, "individual": 1, "whole class": 0, 'large': 2}
+    mapping = {"small": -1, "individual": 1, "whole": 0, 'large': 2}
     return mapping[sub_grouping.split(' ')[0].lower()]
 def num_to_sub_grouping(num):
     mapping = {-1: "Small group", 1: "Individual intervention", 0: "Whole class", 2: "Large group"}
