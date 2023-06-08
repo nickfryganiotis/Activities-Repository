@@ -4,7 +4,7 @@
       <div class="row justify-around" style="padding-top: 2%">
         <q-card
           class="col-3"
-          v-for="(competence, index) in competencesDefinitionsArray.slice(
+          v-for="(competence, index) in competenciesDefinitionsArray.slice(
             3 * (n - 1),
             3 * n
           )"
@@ -27,14 +27,14 @@
 
 <script>
 import { defineComponent } from "vue";
-import { competencesDefinitions } from "src/texts/emosocio_competences.js";
+import { competenciesDefinitions } from "src/texts/emosocio_competencies.js";
 
 export default defineComponent({
   setup() {
-    const competencesDefinitionsArray = Object.keys(competencesDefinitions).map(
-      (key) => [key, competencesDefinitions[key]]
+    const competenciesDefinitionsArray = Object.keys(competenciesDefinitions).map(
+      (key) => [key, competenciesDefinitions[key]]
     );
-    return { competencesDefinitionsArray };
+    return { competenciesDefinitionsArray };
   },
 });
 </script>

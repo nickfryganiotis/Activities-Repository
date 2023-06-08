@@ -24,7 +24,7 @@ const routes = [
       {
         path: "/activity_description/:activityId",
         name: "ActivityDescription",
-        component: () => import("pages/ActivityDescription.vue"),
+        component: () => import("pages/ActivityOverview.vue"),
       },
       {
         path: "/contact_page",

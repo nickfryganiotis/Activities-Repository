@@ -42,7 +42,6 @@
 
       <router-view />
     </q-page-container>
-    <AppFooter />
   </q-layout>
 </template>
 
@@ -50,14 +49,12 @@
 import { defineComponent, ref } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import MenuBtn from "components/MenuBtn.vue";
-import AppFooter from "./AppFouter.vue";
 
 export default defineComponent({
   name: "MainLayout",
 
   components: {
     MenuBtn,
-    AppFooter,
   },
 
   setup() {
