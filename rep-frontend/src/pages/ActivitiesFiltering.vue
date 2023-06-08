@@ -1,213 +1,170 @@
 <template>
-  <div class="q-py-lg row q-pl-sm">
-    <div class="col-4"></div>
-    <div class="col-1"></div>
-    <div class="col-7 text-h5 text-weight-regular q-mb-md">Activities</div>
-    <div class="col-4">
-      <q-card flat bordered class="my-card bg-light-blue-1">
-        <q-card-section>
-          <q-input outlined v-model="ph" placeholder="title" :dense="false" />
-        </q-card-section>
+  <q-page class = "filters-page">
+    <div class = "grid q-pl-xl q-pr-lg">
+      <h3> Activities </h3>
 
-        <q-card-section class="q-pt-none">
-          <div class="row">
-            <q-checkbox
-              class="col"
-              v-model="checkboxes['periodicallyRepeated']"
-              label="periodically repeated"
-            />
-            <q-checkbox
-              class="col"
-              v-model="checkboxes['oneOffActivity']"
-              label="one-off activity"
-            />
-          </div>
-          <div class="row">
-            <q-checkbox
-              class="col"
-              v-model="checkboxes['online']"
-              label="online"
-            />
-            <q-checkbox
-              class="col"
-              v-model="checkboxes['inPerson']"
-              label="in-person"
-            />
-          </div>
-        </q-card-section>
+      <div class = "q-t-lg">
+        <FiltersBarExpanded v-if = "width > 700">
+          <CreateActivityPopup />
+        </FiltersBarExpanded>
 
-        <q-card-section
-          ><div class="text-body1 text-weight-bold">- Duration</div>
-          <div class="row">
-            <q-checkbox
-              class="col"
-              v-model="checkboxes['oneLectiveHour']"
-              label="one lective hour (50 minutes)"
-            />
-            <q-checkbox
-              class="col"
-              v-model="checkboxes['threeLectiveHours']"
-              label="three lective hours"
-            />
-          </div>
-          <div class="row">
-            <q-checkbox
-              class="col"
-              v-model="checkboxes['twoLectiveHours']"
-              label="two lective hours"
-            />
-            <q-checkbox
-              class="col"
-              v-model="checkboxes['fourLectiveHours']"
-              label="four lective hours"
-            />
-          </div>
-        </q-card-section>
-
-        <q-card-section>
-          <div class="text-body1 text-weight-bold">- Age Target Group</div>
-          <div class="row">
-            <q-checkbox
-              class="col"
-              v-model="checkboxes['sixEightYears']"
-              label="6-8 years"
-            />
-            <q-checkbox
-              class="col"
-              v-model="checkboxes['eightTwelveYears']"
-              label="8-12 years"
-            />
-            <q-checkbox
-              class="col"
-              v-model="checkboxes['thirteenSeventenYears']"
-              label="13-17 years"
-            />
-          </div>
-        </q-card-section>
-
-        <q-card-section>
-          <div class="text-body1 text-weight-bold">+ EmoSocio competencies</div>
-        </q-card-section>
-
-        <q-card-section
-          ><div class="text-body1 text-weight-bold">- Sub-grouping</div>
-          <div class="row">
-            <q-checkbox
-              class="col"
-              v-model="checkboxes['groupOfStudents']"
-              label="group of students"
-            />
-            <q-checkbox
-              class="col"
-              v-model="checkboxes['individualIntervention']"
-              label="individual intervention"
-            />
-          </div>
-          <div class="row">
-            <q-checkbox
-              class="col"
-              v-model="checkboxes['wholeClass']"
-              label="whole class"
-            />
-          </div>
-        </q-card-section>
-
-        <q-card-section>
-          <div class="text-body1 text-weight-bold">+ Teacher Role</div>
-        </q-card-section>
-
-        <q-card-section>
-          <div class="text-body1 text-weight-bold">
-            + Suitable for kids with disabilities
-          </div>
-        </q-card-section>
-
-        <q-card-section>
-          <q-select
-            outlined
-            v-model="available"
-            :options="availableOptions"
-            label="Available in"
-            stack-label
+        <div class = "row" style = "align-items: flex-start">
+          <!-- Grid with all activities -->
+          <ActivitiesContainer 
+            class = "col grid my-grid"
+            :loading = "loading" 
+            :data = "filteredData" 
           />
-        </q-card-section>
-      </q-card>
-    </div>
-    <div class="col-1"></div>
-    <div class="col-6">
-      <div v-for="n in counter" :key="n">
-        <div class="q-pb-xl row fit q-gutter-xs q-col-gutter no-wrap">
-          <div v-if="status === 'loading'">Loading...</div>
-          <ActivityCard
-            v-else-if="status === 'success'"
-            class="col-4"
-            v-for="(activity, index) in Object.values(data).slice(
-              (n - 1) * 3,
-              n * 3
-            )"
-            :id="activity['activity']['id']"
-            :title="
-              activity['activity_translations'] !== undefined
-                ? activity['activity_translations'][0]['title']
-                : undefined
-            "
-            :minAge="activity['activity']['min_age']"
-            :maxAge="activity['activity']['max_age']"
-            :key="index"
-            :ratingModel="ratingModel[(n - 1) * 3 + index]"
-            :responses="responses[(n - 1) * 3 + index]"
-            :activityCompetences="activity['activity_competences']"
+          <!-- Filters menu -->
+          <FiltersCard
+            class = "col"
+            v-show = "width > 700"
+            :filters = "filters"
           />
         </div>
       </div>
     </div>
-  </div>
+  </q-page>
 </template>
 
-<script>
-import { defineComponent, ref } from "vue";
-import ActivityCard from "src/components/ActivityCard.vue";
-import { getActivities } from "src/http-client/api/getActivities";
-import { useQuery } from "vue-query";
+<script setup>
+  import { ref, provide, watch, computed } from 'vue';
+  import { onMounted, onBeforeUnmount } from 'vue';
+  import { useQuery, useQueryClient } from 'vue-query';
 
-export default defineComponent({
-  components: {
-    ActivityCard,
-  },
-  setup() {
-    const { status, data, error } = useQuery("getActivities", getActivities, {
-      refetchOnMount: false,
-    });
-    return {
-      ph: ref(""),
-      checkboxes: ref({
-        periodicallyRepeated: false,
-        oneOffActivity: false,
-        online: false,
-        inPerson: false,
-        oneLectiveHour: false,
-        threeLectiveHours: false,
-        twoLectiveHours: false,
-        fourLectiveHours: false,
-        sixEightYears: false,
-        eightTwelveYears: false,
-        thirteenSeventenYears: false,
-        groupOfStudents: false,
-        individualIntervention: false,
-        wholeClass: false,
-      }),
-      available: ref(null),
-      availableOptions: ["English", "Spanish", "Romanian", "Greek"],
-      counter: 6,
-      ratingModel: ref([3, 1, 3, 2, 1, 4, 3, 2, 1, 3, 3, 2, 1, 3, 2, 2]),
-      responses: ref([
-        317, 102, 317, 205, 102, 404, 317, 205, 102, 317, 317, 205, 102, 317,
-        205, 205,
-      ]),
-      data,
-      error,
-      status,
-    };
-  },
-});
+  import _ from 'lodash';
+  
+  import { getFilteredActivities } from 'src/http-client/api/getActivities';
+  
+  import { filtersDefinitions } from 'src/texts/filters';
+
+  import FiltersCard from 'components/FiltersCard.vue';
+  import ActivityCard from 'components/atoms/ActivityCard.vue'
+  import ActivitiesContainer from 'components/ActivitiesContainer.vue';
+  import CreateActivityPopup from 'components/CreateActivityPopup.vue';
+  import FiltersBarExpanded from 'components/atoms/FiltersBarExpanded.vue'
+
+  // * Provide variables for the input form
+  const text = ref('');
+  const setText = (value) => { text.value = value; };
+
+  provide('text', text);
+  provide('setText', setText);
+
+  const filters = ref(filtersDefinitions);       // Import filters and reference them
+  const filtersList = ref({});                   // Define a list of filters
+
+  // * Watch for changes in the filters
+  watch([filters, text], _.debounce(() => {
+    filtersList.value = {};                      // Initialize the list
+
+    // Foreach filter, add its selected options to the list
+    filters.value.forEach(filter => {       
+      filtersList.value[filter.id] = [];
+
+      filter.options.forEach(option => {
+        if (option.value == true)
+          filtersList.value[filter.id].push(option.id);
+      });
+    })
+
+    console.log(filtersList.value);
+    filtersList.value['title'] = text.value;     // Add the input filter to the list
+  
+  	client.refetchQueries({ queryKey: 'filteredData' });        // Refetch the data
+  }, 200), { deep: true });
+
+  // * Function that resets filters
+  function resetFilters() 
+  { 
+    text.value = '';                        // Reset the input form 
+
+    // Foreach filter, reset its options
+    filters.value.forEach(filter => {
+      filter.options.forEach(option => {
+        option.value = false;
+      });
+    })
+  }
+
+  provide('resetFilters', resetFilters);         // Provide function to reset filters
+
+
+  const client = useQueryClient();               // Get the query client
+
+  // * Query to get (filtered) data
+  const { data: filteredData, isLoading: loading } = useQuery({
+    queryKey: ['filteredData', filtersList.value],
+    queryFn: () => {
+      // If there are no filters, get all activities
+			const empty = Object.keys(filtersList.value).length == 0 ||
+				Object.values(filtersList.value).every(value => value.length == 0);
+
+      if (empty)
+        return getFilteredActivities([]);
+      else
+        return getFilteredActivities(filtersList.value);
+    },
+  })
+
+  // TODO: Remove this in deployment
+  watch(filteredData, () => { console.log(filteredData.value); });
+
+
+
+
+
+  // * Provide variables to sort the cards
+  const sorting = ref('');
+  const setSorting = (value) => { sorting.value = value; };
+
+  provide('sorting', sorting);
+  provide('setSorting', setSorting);
+
+  // * Provide variables to define the way data is displayed
+  const display = ref('');
+  const setDisplay = (value) => { display.value = value; };
+
+  provide('setDisplay', setDisplay);
+
+
+
+  // * Methods for getting the window size
+  // * These are used to hide the filters card on small screens
+  const width = ref(0);
+  const height = ref(0);
+
+  function getWindowSize() 
+  {
+    width.value = window.innerWidth;
+    height.value = window.innerHeight;
+  }
+
+  onMounted(() => {
+    getWindowSize();
+    resetFilters();
+    window.addEventListener('resize', getWindowSize);
+  });
+
+  onBeforeUnmount(() => {
+    window.removeEventListener('resize', getWindowSize);
+  });
 </script>
+
+<style scoped>
+  .filters-page {
+    background-color : #FCFFFF;
+    font-family: 'Trebuchet MS';
+  }
+
+  .my-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  }
+
+  .filter-input {
+    width: 100%; 
+    background-color: white; 
+    font-family: 'Trebuchet MS';
+  }
+</style>
