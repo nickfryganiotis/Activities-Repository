@@ -76,8 +76,7 @@ class Activity(db.Model):
     def to_dict(self):
         return dict(id=self.id,
                     created_at=self.created_at.strftime('%Y-%m-%d %H:%M:%S'),
-                    min_age=self.min_age,
-                    max_age=self.max_age,
+                    age_target_group=f"{self.min_age}-{self.max_age}",
                     periodicity=self.periodicity, 
                     duration=num_to_duration(self.duration),
                     presence=self.presence,
@@ -91,16 +90,15 @@ class Activity(db.Model):
                     competences=[competence.to_dict()['code'] for competence in self.activity_competences],
                     didactic_strategies=[didactic_strategy.to_dict()['code'] for didactic_strategy in self.activity_didactic_strategies],
                     special_needs=[special_need.to_dict()['code'] for special_need in self.activity_special_needs],
-                    activity_translations=[activity_translation.to_dict() for activity_translation in self.activity_translations]
+                    activity_translations=self.activity_translations[0].to_dict()
                 )
     
     def preview_to_dict(self):
         return dict(id=self.id,
-                    min_age=self.min_age,
-                    max_age=self.max_age,
+                    age_target_group=f"{self.min_age}-{self.max_age}",
                     teacher_role=self.teacher_role,
                     competences=[competence.to_dict()['code'] for competence in self.activity_competences],
-                    activity_translations=[activity_translation.preview_to_dict() for activity_translation in self.activity_translations]
+                    activity_translations=self.activity_translations[0].to_dict()
                     ) 
     
     def update(self, *args, **kwargs):
