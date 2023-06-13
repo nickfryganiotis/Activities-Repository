@@ -15,3 +15,5 @@ class BaseConfig(object):
         os.getenv('DB_HOST', 'localhost'),
         os.getenv('DB_NAME', 'activities'),
     )
+
+    SECRET_KEY = '8ZZf5AsZcszU2y5B'

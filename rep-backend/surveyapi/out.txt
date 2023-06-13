@@ -1,6 +1,0 @@
- * Serving Flask app 'applications'
- * Debug mode: on
-self-awareness 1
-group emotional awareness 7
-self-awareness 9
-self-awareness 9

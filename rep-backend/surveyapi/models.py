@@ -13,7 +13,7 @@ class User(db.Model):
     surname = db.Column(db.String(500), nullable=False)
     email = db.Column(db.String(120), nullable=True)
     role = db.Column(db.String(120), nullable=False)
-    password = db.Column(db.String(255), nullable=False)
+    password = db.Column(db.String(255), nullable=True)
     age = db.Column(db.Integer, nullable=False)
     sex = db.Column(db.Text, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
@@ -27,16 +27,39 @@ class User(db.Model):
     stars = db.relationship('Stars', backref='evaluator')
     comments = db.relationship('Comments', backref='commenter')
 
-    def __init__(self, name, surname, sex, email, password, role):
+    def __init__(self, name, surname, sex, age, email, password, role):
         self.name = name
         self.surname = surname
         self.sex = sex
-        self.age = 40
-        #self.abbreviation = name[0:1]+surname[0:1]
+        self.age = age
         self.email = email
         self.role = role
         self.password = generate_password_hash(password, method='sha256')
+    
+    @classmethod
+    def authenticate(cls, **kwargs):
+        email = kwargs.get('email')
+        password = kwargs.get('password')
+        #role = kwargs.get('role')
 
+        #if not email or not password or not role:
+        if not email or not password:
+            return None
+
+        user = cls.query.filter_by(email=email).first()
+        #user.role = cls.query.filter_by(email=email).first().role
+        #user.role = role
+        #if not user or not check_password_hash(user.password, password) or not (user.role == role):
+        if not user or not check_password_hash(user.password, password):
+            return None
+
+        return user
+    
+    def to_dict(self):
+        return dict(id=self.id,
+                    email=self.email,
+                    role=self.role
+                    )
 
 class Activity(db.Model):
     __tablename__ = 'activity'
@@ -91,7 +114,7 @@ class Activity(db.Model):
                     didactic_strategies=[didactic_strategy.to_dict()['code'] for didactic_strategy in self.activity_didactic_strategies],
                     special_needs=[special_need.to_dict()['code'] for special_need in self.activity_special_needs],
                     activity_translations=self.activity_translations[0].to_dict()
-                )
+                    )
     
     def preview_to_dict(self):
         return dict(id=self.id,
@@ -157,7 +180,7 @@ class Activity_translation(db.Model):
                     description=self.description,
                     evaluation=self.evaluation,
                     material=self.material
-                )
+                    )
     
     def preview_to_dict(self):
         return dict(id=self.id,
@@ -205,7 +228,7 @@ class Didactic_strategy(db.Model):
     def to_dict(self):
         return dict(id=self.id,
                     code=self.code
-                )    
+                    )    
 
 class Activity_competence(db.Model):
     __tablename__ = 'activity_competence'
@@ -239,7 +262,7 @@ class Competence(db.Model):
     def to_dict(self):
         return dict(id=self.id,
                     code=self.code
-                )    
+                    )    
     
 class Activity_special_need(db.Model):
     __tablename__ = 'activity_special_need'
@@ -257,7 +280,7 @@ class Activity_special_need(db.Model):
                     activity_id=self.activity_id,
                     special_need_id=self.special_need_id,
                     code=self.special_need.code
-                   )
+                    )
 
 class Special_need(db.Model):
     __tablename__ = 'special_need'
@@ -273,5 +296,5 @@ class Special_need(db.Model):
     def to_dict(self):
         return dict(id=self.id,
                     code=self.code
-                )    
+                    )    
  

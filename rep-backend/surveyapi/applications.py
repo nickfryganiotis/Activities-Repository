@@ -1,10 +1,27 @@
 from flask import Flask
 from flask_cors import CORS
+from flask_mail import Mail
 
 
 app = Flask(__name__)
 CORS(app)
 app.config.from_object('config.BaseConfig')
+
+
+# MAIL config GMAIL
+app.config['MAIL_SERVER']='smtp.gmail.com'
+app.config['MAIL_PORT'] = 465
+# app.config['MAIL_USERNAME'] = 'emosociograms@gmail.com'
+# app.config['MAIL_PASSWORD'] = '2TsfGHt3GTB8tREo'
+# app.config['MAIL_USE_TLS'] = False
+# app.config['MAIL_USE_SSL'] = True
+app.config['MAIL_USERNAME'] = 'v3yeastproject@gmail.com'
+app.config['MAIL_DEFAULT_SENDER'] = 'v3yeastproject <v3yeastproject@gmail.com>'
+app.config['MAIL_PASSWORD'] = 'gfyxkzksvlotcsly'
+# app.config['MAIL_PASSWORD'] = 'V3yeastproject!'
+app.config['MAIL_USE_SSL'] = True
+
+app.mail = Mail(app)
 
 from blueprints.users import users
 from blueprints.competences import competences
