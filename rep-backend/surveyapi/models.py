@@ -98,7 +98,7 @@ class Activity(db.Model):
                     age_target_group=f"{self.min_age}-{self.max_age}",
                     teacher_role=self.teacher_role,
                     competences=[competence.to_dict()['code'] for competence in self.activity_competences],
-                    activity_translations=self.activity_translations[0].to_dict()
+                    activity_translations=self.activity_translations[0].preview_to_dict()
                     ) 
     
     def update(self, *args, **kwargs):

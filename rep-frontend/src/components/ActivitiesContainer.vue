@@ -19,15 +19,15 @@
         v-for = "activity in props.data"
         :key = "activity"
         :id = "activity.id"
-        :title = "activity.activity_translations[0].title"
+        :title = "activity.activity_translations.title"
         :competences = "activity.competences"
-        :description = "activity.activity_translations[0].short_description"
+        :description = "activity.activity_translations.short_description"
       />
     </div>
 </template>
 
 <script setup>
-  import { computed, inject, watch , ref} from 'vue';
+  import { computed, inject, watch , ref } from 'vue';
 
   import ActivityCard from 'components/atoms/ActivityCard.vue';
 

@@ -23,16 +23,15 @@ export const parameters = {
         }
     ],
     'periodicity': [
+        'daily',
+        'one time',
         'weekly',
         'monthly',
-        'quarterly',
-        'one time'
     ],
     'duration': [
-        '1 hour',
-        '2 hours',
-        '3 hours',
-        '4 hours',
+        '1 lective hour',
+        '2 lective hours',
+        '3 lective hours',
     ],
     'presence': [
         'online',
@@ -41,8 +40,9 @@ export const parameters = {
     ],
     'subgrouping' : [
         'individual',
-        'small group',
-        'large group',
+        'small group (2-4)',
+        'medium group (5-7)',
+        'large group (8-10)',
         'whole class'
     ],
     'teacherRole' : [

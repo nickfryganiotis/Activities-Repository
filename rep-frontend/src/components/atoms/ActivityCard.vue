@@ -6,7 +6,7 @@
       @click = "router.push(`/activity_description/${id}`)"
     >
       <!-- Title and creator -->
-      <q-card-section class = "bg-deep-purple" style = "white-space: normal; word-break: break-word">
+      <q-card-section class = "bg-deep-orange-4" style = "white-space: normal; word-break: break-word">
         <div class = "text-h6 ellipsis text-white"> {{ title }} </div>
             
         <!-- Rating -->
@@ -17,7 +17,7 @@
             flat
             v-model = "ratingModel" 
             :max = "5" 
-            color = "orange"
+            color = "deep-purple"
             readonly 
           />
           <!-- Value -->

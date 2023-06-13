@@ -21,6 +21,7 @@
     "npm": "^9.6.3",
     "quasar": "^2.6.0",
     "vue": "^3.0.0",
+    "vue-composition-api": "^0.0.1",
     "vue-query": "^1.26.0",
     "vue-router": "^4.0.0"
   },

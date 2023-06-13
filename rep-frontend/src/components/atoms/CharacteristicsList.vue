@@ -2,7 +2,7 @@
   <q-card flat class = "col-3 q-mr-md q-mt-lg">
     <q-list>
       <q-item 
-        v-for = "item in dummy" 
+        v-for = "item in fields" 
         :key = "item"
       >
         <q-item-section>
@@ -19,18 +19,35 @@
 </template>
 
 <script setup>
-  import { ref } from 'vue';
+  import { ref, computed, watch } from 'vue';
 
+  const props = defineProps({
+    data: {
+      type: Object,
+      required: true,
+      default: () => {},
+    },
+    loading: {
+      type: Boolean,
+      required: true,
+      default: true,
+    },
+  })
 
-  const dummy = ref([
-    {label: 'Age', value: '10-13'},
-    {label: 'Periodicity', value: 'periodic'},
-    {label: 'Duration', value: '1-hour'},
-    {label: 'Presence', value: 'online'},
-    {label: 'Teacher Role', value: 'leader'},
-    {label: 'Sub-Grouping', value: 'teams'},
-    {label: 'Age', value: '10-13'},
-    {label: 'Prior Activity', value: '-'},
-    {label: 'Next Activity', value: '-'}
-  ]);
+  const fields = computed(() => {
+    console.log(props.data);
+    return [
+      { label: 'Age', value: props.data.age_target_group },
+      { label: 'Periodicity', value: props.data.periodicity },
+      { label: 'Duration', value: props.data.duration },
+      { label: 'Presence', value: props.data.presence },
+      { label: 'Teacher Role', value: props.data.teacher_role },
+      { label: 'Sub-Grouping', value: props.data.sub_grouping },
+      { label: 'Prior Activity', value: props.data.apriory },
+      { label: 'Next Activity', value: props.data.posteriory }
+    ]
+  });
+
+    console.log(fields.value);
+
 </script>

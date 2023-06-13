@@ -12,7 +12,7 @@
           <!-- Grid with all activities -->
           <ActivitiesContainer 
             class = "col grid my-grid"
-            :loading = "loading" 
+            :loading = "fetching" 
             :data = "filteredData === undefined ? [] : filteredData.activities"
           />
           <!-- Filters menu -->
@@ -83,7 +83,7 @@
     console.log(filtersList.value);
     filtersList.value['title'] = text.value;     // Add the input filter to the list
   
-  	client.refetchQueries({ queryKey: 'filteredData' });        // Refetch the data
+  	client.refetchQueries({ queryKey: 'filteredData'});        // Refetch the data
   }, 200), { deep: true });
 
   // * Function that resets filters
@@ -105,22 +105,15 @@
   const client = useQueryClient();               // Get the query client
 
   // * Query to get (filtered) data
-  const { data: filteredData, isLoading: loading } = useQuery({
+  const { data: filteredData, isFetching: fetching } = useQuery({
     queryKey: ['filteredData', filtersList.value],
-    queryFn: () => {
-      // If there are no filters, get all activities
-			const empty = Object.keys(filtersList.value).length == 0 ||
-				Object.values(filtersList.value).every(value => value.length == 0);
+    queryFn: () => getFilteredActivities(filtersList.value)
+  });
 
-        return getFilteredActivities(filtersList.value);
-    },
-  })
+  watch(fetching, () => { console.log(fetching.value); })
 
   // TODO: Remove this in deployment
-  watch(filteredData, () => { console.log(Object.values(filteredData)) });
-
-
-
+  watch(filteredData, () => { console.log(Object.values(filteredData.value)); });
 
   // * Provide variables to sort the cards
   const sorting = ref('');

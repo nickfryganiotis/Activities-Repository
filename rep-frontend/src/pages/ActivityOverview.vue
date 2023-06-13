@@ -10,15 +10,15 @@
           to = "/activities"
         />
         <div class = "col-auto">
-          <h3 v-if = "status === 'loading'"> Loading... </h3>
-          <h3 v-else> {{ data.activity_translations[0].title }} </h3>
+          <h3 v-if = "loading"> Loading... </h3>
+          <h3 v-else> {{ data.activity_translations.title }} </h3>
         </div>
       </div>
 
       <div class = "row">
-        <ActivityDetails 
+        <ActivityInfoCard
           class = "col-9"
-          :loading = "status === 'loading'"
+          :loading = "loading"
           :data = "data === undefined ? {} : data"
         />
       </div>
@@ -33,12 +33,12 @@
 
   import { getActivityById } from "src/http-client/api/getActivities";
 
-  import ActivityDetails from "components/atoms/ActivityDetails.vue";
+  import ActivityInfoCard from "components/atoms/ActivityInfoCard.vue";
 
   const route = useRoute();
   const id = route.params.activityId;
 
-  const { data, status } = useQuery({
+  const { data, isLoading: loading } = useQuery({
     queryKey: ["getActivityById", id],
     queryFn: () => getActivityById(id),
     refetchOnMount: false

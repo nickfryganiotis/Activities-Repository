@@ -28,19 +28,19 @@ export const filtersDefinitions = [
         caption: 'How often is the activity repeated?',
         options: [
             {
+                id: 'one-time',
+                value: false
+            },
+            { 
+                id: 'daily',
+                value: false
+            },
+            {
                 id: 'weekly',
                 value: false
             },
             {
                 id: 'monthly',
-                value: false
-            },
-            {
-                id: 'quarterly',
-                value: false
-            },
-            {
-                id: 'one-time',
                 value: false
             }
         ],
@@ -57,6 +57,10 @@ export const filtersDefinitions = [
             {
                 id: 'in-person',
                 value: false
+            },
+            {
+                id: 'both',
+                value: false
             }
         ]
     },
@@ -66,15 +70,15 @@ export const filtersDefinitions = [
         caption: 'How long does the activity last?',
         options: [
             {
-                id: '1 hour',
+                id: '1 lective hour',
                 value: false
             },
             {
-                id: '2 hours',
+                id: '2 lective hours',
                 value: false
             },
             {
-                id: '3 hours',
+                id: '3 lective hours',
                 value: false
             }
         ]
@@ -85,15 +89,19 @@ export const filtersDefinitions = [
         caption: 'How is the group divided?',
         options: [
             {
-                id: 'small group',
-                value: false
-            },
-            {
-                id: 'large group',
-                value: false
-            },
-            {
                 id: 'individual',
+                value: false
+            },
+            {
+                id: 'small group (2 - 4)',
+                value: false
+            },
+            {
+                id: 'medium group (5 - 7)',
+                value: false
+            },
+            {
+                id: 'large group (8 - 10)',
                 value: false
             },
             {
