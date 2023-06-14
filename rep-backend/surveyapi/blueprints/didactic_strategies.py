@@ -3,7 +3,7 @@ from models import db, Didactic_strategy
 from flask import Blueprint
 didactic_strategies = Blueprint('didactic_strategies', __name__)
 
-@didactic_strategies.route('/create_didactic_strategy', methods=['POST'])
+@didactic_strategies.route('/create_didactic_strategy/', methods=['POST'])
 def create_didactic_strategy():
         if request.method=="POST":
             data = request.get_json()

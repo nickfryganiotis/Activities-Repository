@@ -81,7 +81,7 @@ class Activity(db.Model):
     has_apriory = db.relationship('Activity', foreign_keys = [apriory], remote_side = [id], backref='apriori_activity')
     has_posteriory = db.relationship('Activity', foreign_keys = [posteriory], remote_side = [id], backref= 'posteriory_activity')
     activity_translations = db.relationship('Activity_translation', backref='activity')
-    activity_competences = db.relationship('Activity_competence', backref='activity')
+    activity_competencies = db.relationship('Activity_competency', backref='activity')
     activity_didactic_strategies = db.relationship('Activity_didactic_strategy', backref='activity')
     activity_special_needs = db.relationship('Activity_special_need', backref='activity')
     stars = db.relationship('Stars', backref='activity')
@@ -110,7 +110,7 @@ class Activity(db.Model):
                     apriory=self.apriory,
                     posteriory=self.posteriory,
                     creator=self.creator,
-                    competences=[competence.to_dict()['code'] for competence in self.activity_competences],
+                    competencies=[competency.to_dict()['code'] for competency in self.activity_competencies],
                     didactic_strategies=[didactic_strategy.to_dict()['code'] for didactic_strategy in self.activity_didactic_strategies],
                     special_needs=[special_need.to_dict()['code'] for special_need in self.activity_special_needs],
                     activity_translations=self.activity_translations[0].to_dict()
@@ -120,7 +120,7 @@ class Activity(db.Model):
         return dict(id=self.id,
                     age_target_group=f"{self.min_age}-{self.max_age}",
                     teacher_role=self.teacher_role,
-                    competences=[competence.to_dict()['code'] for competence in self.activity_competences],
+                    competencies=[competency.to_dict()['code'] for competency in self.activity_competencies],
                     activity_translations=self.activity_translations[0].preview_to_dict()
                     ) 
     
@@ -230,12 +230,12 @@ class Didactic_strategy(db.Model):
                     code=self.code
                     )    
 
-class Activity_competence(db.Model):
-    __tablename__ = 'activity_competence'
+class Activity_competency(db.Model):
+    __tablename__ = 'activity_competency'
 
     id = db.Column(db.Integer, primary_key=True)
     activity_id = db.Column(db.Integer, db.ForeignKey('activity.id'))
-    competence_id = db.Column(db.Integer, db.ForeignKey('competence.id'))
+    competency_id = db.Column(db.Integer, db.ForeignKey('competency.id'))
     
     def __init__(self, *args, **kwargs):
         for key, value in kwargs.items():
@@ -244,16 +244,16 @@ class Activity_competence(db.Model):
     def to_dict(self):
         return dict(id=self.id,
                     activity_id=self.activity_id,
-                    competence_id=self.competence_id,
-                    code=self.competence.code
+                    competency_id=self.competency_id,
+                    code=self.competency.code
                    )
 
-class Competence(db.Model):
-    __tablename__ = 'competence'
+class Competency(db.Model):
+    __tablename__ = 'competency'
 
     id = db.Column(db.Integer, primary_key=True)
     code = db.Column(db.String(255), nullable=False)
-    activities = db.relationship('Activity_competence', backref='competence')
+    activities = db.relationship('Activity_competency', backref='competency')
 
     def __init__(self, *args, **kwargs):
         for key, value in kwargs.items():

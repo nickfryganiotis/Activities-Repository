@@ -1,4 +1,4 @@
-competence_codes = [
+competency_codes = [
     "self-awareness", 
     "emotional regulation",
     "self-motivation",

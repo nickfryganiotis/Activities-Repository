@@ -9,7 +9,7 @@
 
 
 from flask import request
-from models import db, Activity, Activity_competence, Activity_translation, Competence, Didactic_strategy, Activity_didactic_strategy, Special_need, Activity_special_need, User
+from models import db, Activity, Activity_competency, Activity_translation, Competency, Didactic_strategy, Activity_didactic_strategy, Special_need, Activity_special_need, User
 from flask import Blueprint, jsonify, current_app
 from sqlalchemy import or_, and_
 from helpers import duration_to_num, sub_grouping_to_num
@@ -49,7 +49,7 @@ def token_required(f):
             #print(user)
             if not user:
                 raise RuntimeError('User not found')
-            return f(user, *args, **kwargs)
+            return f(user, *args,**kwargs)
         except jwt.ExpiredSignatureError:
             return jsonify(expired_msg), 401 # 401 is Unauthorized HTTP status code
         except (jwt.InvalidTokenError, Exception) as e:
@@ -79,17 +79,17 @@ def create_activity(current_user):
         db.session.add(new_activity_translation)
         db.session.commit()
 
-        ## add activity competences
+        ## add activity competencies
                         
-        competences_ids = Competence.query.with_entities(Competence.id).\
-                                filter(Competence.code.in_(data['activity_competences'])).\
+        competencies_ids = Competency.query.with_entities(Competency.id).\
+                                filter(Competency.code.in_(data['activity_competencies'])).\
                                     all()
-        competences_ids = [competence_id for (competence_id,) in competences_ids] 
-        new_activity_competences = [
-                  Activity_competence(activity_id=new_activity.id, competence_id=comp_id) for comp_id in competences_ids
+        competencies_ids = [competency_id for (competency_id,) in competencies_ids] 
+        new_activity_competencies = [
+                  Activity_competency(activity_id=new_activity.id, competency_id=comp_id) for comp_id in competencies_ids
         ]
             
-        db.session.add_all(new_activity_competences)
+        db.session.add_all(new_activity_competencies)
         db.session.commit()
 
         ## add activity didactic strategies
@@ -233,17 +233,17 @@ def filter_activities(cursor, language_code):
                             join(Activity_translation).\
                                 filter(and_(*query_parameters))
                                     
-        ## Competences, Didactic strategies, Special needs
+        ## Competencies, Didactic strategies, Special needs
         
-        competences = data['competences']
+        competencies = data['competencies']
         didactic_strategies = data['didactic_strategies']
         special_needs = data['special_needs']
 
-        activity_competences = db.session.\
-                                query(Activity_competence.activity_id).\
-                                    join(Competence).\
-                                        filter(Competence.code.in_(competences)).\
-                                            group_by(Activity_competence.activity_id).\
+        activity_competencies = db.session.\
+                                query(Activity_competency.activity_id).\
+                                    join(Competency).\
+                                        filter(Competency.code.in_(competencies)).\
+                                            group_by(Activity_competency.activity_id).\
                                                 subquery()
                 
         activity_didactic_strategies = db.session.\
@@ -260,8 +260,8 @@ def filter_activities(cursor, language_code):
                                                 group_by(Activity_special_need.activity_id).\
                                                     subquery()
         
-        if competences:
-            activities = activities.join(activity_competences)
+        if competencies:
+            activities = activities.join(activity_competencies)
         
         if didactic_strategies:
             activities = activities.join(activity_didactic_strategies)

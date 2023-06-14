@@ -24,13 +24,13 @@ app.config['MAIL_USE_SSL'] = True
 app.mail = Mail(app)
 
 from blueprints.users import users
-from blueprints.competences import competences
+from blueprints.competencies import competencies
 from blueprints.didactic_strategies import didactic_strategies
 from blueprints.special_needs import special_needs
 from blueprints.activities import activities
 
 app.register_blueprint(users)
-app.register_blueprint(competences)
+app.register_blueprint(competencies)
 app.register_blueprint(didactic_strategies)
 app.register_blueprint(special_needs)
 app.register_blueprint(activities)

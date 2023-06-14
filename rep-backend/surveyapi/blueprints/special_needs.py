@@ -3,7 +3,7 @@ from models import db, Special_need
 from flask import Blueprint
 special_needs = Blueprint('special_needs', __name__)
 
-@special_needs.route('/create_special_need', methods=['POST'])
+@special_needs.route('/create_special_need/', methods=['POST'])
 def create_special_need():
         if request.method=="POST":
             data = request.get_json()
