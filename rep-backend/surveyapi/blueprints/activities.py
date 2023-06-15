@@ -127,6 +127,7 @@ def create_activity(current_user):
 
 @activities.route('/get_activity/<int:id>/<string:language_code>/', methods=('GET',))
 def get_activity(id, language_code):
+    
     if request.method=='GET':
 
         activity = Activity.query.\
@@ -134,7 +135,6 @@ def get_activity(id, language_code):
                             join(Activity_translation).\
                                 filter_by(language_code='en').\
                                     first()
-        activity.to_dict()
         return activity.to_dict()
 
     else: 
@@ -142,8 +142,16 @@ def get_activity(id, language_code):
     
 #UD for Activity
 @activities.route('/activity/<int:id>/', methods=('PUT','DELETE',))
-def activity(id):
+@token_required
+def activity(current_user, id):
 
+    ## check if this user can manage this activity
+    user_id = current_user.id
+    us = User.query.filter_by(id=user_id).first()
+    creator = Activity.query.filter_by(creator=us.id, id=id).first()
+    if us.role != "admin" and not creator:
+        return jsonify({ 'message': 'User has no privileges', 'code': 'userHasNoPrivileges' }), 409
+    
     ## update the information of an activity
     if request.method == 'PUT':
         
@@ -298,14 +306,15 @@ def filter_activities(cursor, language_code):
         return "Error"
 
 @activities.route('/create_translation/<int:activity_id>/', methods=('POST',))
-def create_translation(activity_id):
+@token_required
+def create_translation(current_user, activity_id):
     
     ## add new translation
     if request.method == 'POST':
         
         data = request.get_json()
         
-        new_activity_translation = Activity_translation(**data['activity_translation'], activity_id = activity_id)  
+        new_activity_translation = Activity_translation(**data['activity_translation'], activity_id=activity_id, creator=current_user.id)  
             
         db.session.add(new_activity_translation)
         db.session.commit()
@@ -317,8 +326,16 @@ def create_translation(activity_id):
 
 #RUD for Activity translations
 @activities.route('/activity_translation/<int:id>/', methods=('GET','PUT','DELETE',))
-def activity_translation(id):
+@token_required
+def activity_translation(current_user, id):
     
+    ## check if this user can manage this activity translation
+    user_id = current_user.id
+    us = User.query.filter_by(id=user_id).first()
+    creator = Activity_translation.query.filter_by(creator=us.id, activity_id=id).first()
+    if us.role != "admin" and not creator:
+        return jsonify({ 'message': 'User has no privileges', 'code': 'userHasNoPrivileges' }), 409
+
     ## get an activity translation
     if request.method == 'GET':
 

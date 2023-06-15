@@ -1,4 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import func
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from helpers import duration_to_num, sub_grouping_to_num, num_to_duration, num_to_sub_grouping
@@ -97,6 +98,8 @@ class Activity(db.Model):
                 setattr(self, key, value)  
 
     def to_dict(self):
+        ratings = len(self.stars)
+        stars = db.session.query(func.avg(Stars.value), Stars.activity_id==self.id).scalar() or 0
         return dict(id=self.id,
                     created_at=self.created_at.strftime('%Y-%m-%d %H:%M:%S'),
                     age_target_group=f"{self.min_age}-{self.max_age}",
@@ -113,7 +116,11 @@ class Activity(db.Model):
                     competencies=[competency.to_dict()['code'] for competency in self.activity_competencies],
                     didactic_strategies=[didactic_strategy.to_dict()['code'] for didactic_strategy in self.activity_didactic_strategies],
                     special_needs=[special_need.to_dict()['code'] for special_need in self.activity_special_needs],
-                    activity_translations=self.activity_translations[0].to_dict()
+                    activity_translations=self.activity_translations[0].to_dict(),
+                    comments=[{'value': comment.value, 'commenter': f"{comment.commenter.name} {comment.commenter.surname}"} 
+                              for comment in self.comments],
+                    ratings=ratings,
+                    stars=int(stars) 
                     )
     
     def preview_to_dict(self):
@@ -153,6 +160,13 @@ class Comments(db.Model):
     def __init__(self, *args, **kwargs):
         for key, value in kwargs.items():
             setattr(self, key, value)
+
+    def to_dict(self):
+        return dict(id=self.id,
+                    value=self.value,
+                    activity_id=self.activity_id,
+                    user_id=self.user_id 
+                    )        
 
 class Activity_translation(db.Model):
     __tablename__ = 'activity_translation'
