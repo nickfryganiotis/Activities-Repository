@@ -99,7 +99,11 @@ class Activity(db.Model):
 
     def to_dict(self):
         ratings = len(self.stars)
-        stars = db.session.query(func.avg(Stars.value), Stars.activity_id==self.id).scalar() or 0
+        stars_value = db.session.query(func.avg(Stars.value), Stars.activity_id==self.id).scalar() or 0
+        stars_distr = db.session.query(Stars.value, func.count(Stars.value)).group_by(Stars.value).all()
+        stars_distr = {str(key):value for (key, value) in stars_distr}
+        init_distr = {str(i): 0 for i in range(1, 6)}
+        stars_distr = dict(init_distr, **stars_distr)  ## dictionary union https://stackoverflow.com/questions/9819602/union-of-dict-objects-in-python
         return dict(id=self.id,
                     created_at=self.created_at.strftime('%Y-%m-%d %H:%M:%S'),
                     age_target_group=f"{self.min_age}-{self.max_age}",
@@ -120,7 +124,8 @@ class Activity(db.Model):
                     comments=[{'value': comment.value, 'commenter': f"{comment.commenter.name} {comment.commenter.surname}"} 
                               for comment in self.comments],
                     ratings=ratings,
-                    stars=int(stars) 
+                    stars_value=int(stars_value),
+                    stars_distr=stars_distr 
                     )
     
     def preview_to_dict(self):
