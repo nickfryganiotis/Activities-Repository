@@ -27,13 +27,17 @@ from blueprints.users import users
 from blueprints.competencies import competencies
 from blueprints.didactic_strategies import didactic_strategies
 from blueprints.special_needs import special_needs
+from blueprints.comments import comments
 from blueprints.activities import activities
+from blueprints.stars import stars
 
 app.register_blueprint(users)
 app.register_blueprint(competencies)
 app.register_blueprint(didactic_strategies)
 app.register_blueprint(special_needs)
+app.register_blueprint(comments)
 app.register_blueprint(activities)
+app.register_blueprint(stars)
 
 
 from models import db

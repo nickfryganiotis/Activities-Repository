@@ -153,6 +153,14 @@ class Stars(db.Model):
         for key, value in kwargs.items():
             setattr(self, key, value)
 
+    def to_dict(self):
+        return dict(id=self.id,
+                    value=self.value,
+                    activity_id=self.activity_id,
+                    user_id=self.user_id 
+                    )
+    def update(self, value):
+        self.value=value      
 
 class Comments(db.Model):
     __tablename__ = 'comments'
