@@ -34,4 +34,4 @@ from activities import activities
 url = "http://localhost:5000/create_activity/"
 
 for activity in activities:
-    x = requests.post(url, json=activity, headers={"Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJuZnJ5Z2FuaW90aXNAbmV0bW9kZS5udHVhLmdyIiwiaWF0IjoxNjg2NzQ1NjE1LCJleHAiOjE2ODY3NTY0MTV9.1pO8H0YjRkkcsJUPXuWV7WVlP2SFjzHlIvIavCJEyfU"})
+    x = requests.post(url, json=activity, headers={"Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJuZnJAZXguY29tIiwiaWF0IjoxNjg3MDQ4MjA2LCJleHAiOjE2ODcwNTkwMDZ9.JPMASAJ8j2BsyqDPLnptFYEN8AbPXF5itaIyQOmbXnk"})
