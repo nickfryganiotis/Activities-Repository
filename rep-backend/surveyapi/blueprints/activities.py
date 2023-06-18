@@ -191,8 +191,7 @@ def filter_activities(cursor, language_code):
         
         ## Activity_translation attributes
 
-        if not data['title'] == "":
-            query_parameters.append(Activity_translation.title == data['title'])
+        query_parameters.append(Activity_translation.title.like(f"%{data['title']}%"))
         query_parameters.append(Activity_translation.language_code == language_code)
                        
         activities = Activity.\
