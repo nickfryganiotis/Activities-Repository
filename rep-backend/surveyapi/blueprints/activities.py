@@ -33,7 +33,7 @@ def create_activity(current_user):
 
         ## add initial translation
         
-        new_activity_translation = Activity_translation(**data['activity_translation'], activity_id = new_activity.id)  
+        new_activity_translation = Activity_translation(**data['activity_translation'], activity_id = new_activity.id, creator=current_user.id)  
             
         db.session.add(new_activity_translation)
         db.session.commit()
